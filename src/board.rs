@@ -1,11 +1,32 @@
+use std::fmt;
+
+#[derive(Clone, Copy)]
 pub enum StoneColor {
     Black,
     White,
 }
 
+impl StoneColor {
+    pub fn opposite(&self) -> StoneColor {
+        match self {
+            StoneColor::Black => StoneColor::White,
+            StoneColor::White => StoneColor::Black,
+        }
+    }
+}
+
+impl fmt::Display for StoneColor {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            StoneColor::Black => write!(f, "Black"),
+            StoneColor::White => write!(f, "White"),
+        }
+    }
+}
+
 /// Represents a point on the Othello board as 1 bit of a 64 bit integer.
 /// The 64 bits of integer correspond to the 8 x 8 squares of the board.
-type Point = i64;
+pub type Point = i64;
 
 /// Representation of Othello board.
 pub struct Board {
@@ -49,7 +70,12 @@ impl Board {
     }
 
     pub fn remove_stone(&mut self, color: StoneColor, point: Point) {
-        //
+        // TODO Not yet implemented
+    }
+
+    pub fn can_play(&self, color: StoneColor) -> bool {
+        // TODO Not yet implemented
+        true
     }
 
     #[inline(always)]
