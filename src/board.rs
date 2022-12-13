@@ -34,7 +34,18 @@ impl Board {
 
     #[inline(always)]
     pub fn place_stone_at_point(&mut self, color: StoneColor, point: Point) {
-        *self.get_stones(color) |= point;
+        *self.get_stones_ref(color) |= point;
+    }
+
+    #[inline(always)]
+    pub fn has_stone(&self, color: StoneColor, x: i32, y: i32) -> bool {
+        let point = Board::to_point(x, y);
+        self.has_stone_at_point(color, point)
+    }
+
+    #[inline(always)]
+    pub fn has_stone_at_point(&self, color: StoneColor, point: Point) -> bool {
+        self.get_stones(color) & point == point
     }
 
     pub fn remove_stone(&mut self, color: StoneColor, point: Point) {
@@ -47,61 +58,18 @@ impl Board {
     }
 
     #[inline(always)]
-    pub fn get_stones(&mut self, color: StoneColor) -> &mut i64 {
+    pub fn get_stones(&self, color: StoneColor) -> i64 {
+        match color {
+            StoneColor::Black => self.black_stones,
+            StoneColor::White => self.white_stones,
+        }
+    }
+
+    #[inline(always)]
+    pub fn get_stones_ref(&mut self, color: StoneColor) -> &mut i64 {
         match color {
             StoneColor::Black => &mut self.black_stones,
             StoneColor::White => &mut self.white_stones,
         }
-    }
-
-    /*
-     *     A   B   C   D   E   F   G   H
-     *   +---+---+---+---+---+---+---+---+
-     * 1 |   |   |   |   |   |   |   |   |
-     *   +---+---+---+---+---+---+---+---+
-     * 2 |   |   |   |   |   |   |   |   |
-     *   +---+---+---+---+---+---+---+---+
-     * 3 |   |   |   |   |   |   |   |   |
-     *   +---+---+---+---+---+---+---+---+
-     * 4 |   |   |   | ● | ○ |   |   |   |
-     *   +---+---+---+---+---+---+---+---+
-     * 5 |   |   |   | ○ | ● |   |   |   |
-     *   +---+---+---+---+---+---+---+---+
-     * 6 |   |   |   |   |   |   |   |   |
-     *   +---+---+---+---+---+---+---+---+
-     * 7 |   |   |   |   |   |   |   |   |
-     *   +---+---+---+---+---+---+---+---+
-     * 8 |   |   |   |   |   |   |   |   |
-     *   +---+---+---+---+---+---+---+---+
-     *
-     */
-    pub fn to_str(&self) -> String {
-        let mut result = "".to_string();
-
-        let border = "  +---+---+---+---+---+---+---+---+\n";
-        result.push_str("    A   B   C   D   E   F   G   H\n");
-
-        for x in 0..=7 {
-            result.push_str(border);
-            result.push_str(&((x + 1).to_string() + " "));
-            for y in 0..=7 {
-                result.push_str("| ");
-
-                let point = Board::to_point(x, y);
-                let stone = if (self.black_stones & point) == point {
-                    "○"
-                } else if (self.white_stones & point) == point {
-                    "●"
-                } else {
-                    " "
-                };
-                result.push_str(stone);
-                result.push_str(" ");
-            }
-            result.push_str("|\n");
-        }
-        result.push_str(border);
-
-        return result;
     }
 }

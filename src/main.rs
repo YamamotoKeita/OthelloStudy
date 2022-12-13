@@ -1,12 +1,12 @@
 use crate::board::{Board, StoneColor};
+use crate::cui_view::CuiView;
 
 mod board;
+mod cui_view;
 
 fn main() {
     let mut board = Board::new();
-    // board.place_stone(StoneColor::Black, 0, 0);
-    // board.place_stone(StoneColor::Black, 1, 1);
-    // board.place_stone(StoneColor::White, 2, 2);
+    let view = CuiView::new();
 
-    println!("{}", board.to_str());
+    println!("{}", view.to_str(&board));
 }
