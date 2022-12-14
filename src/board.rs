@@ -1,11 +1,22 @@
 use std::fmt;
 
 #[derive(Clone, Copy)]
+pub enum Direction {
+    Up,
+    UpperRight,
+    Right,
+    LowerRight,
+    Down,
+    LowerLeft,
+    Left,
+    UpperLeft,
+}
+
+#[derive(Clone, Copy)]
 pub enum StoneColor {
     Black,
     White,
 }
-
 impl StoneColor {
     pub fn opposite(&self) -> StoneColor {
         match self {
@@ -26,13 +37,13 @@ impl fmt::Display for StoneColor {
 
 /// Represents a point on the Othello board as 1 bit of a 64 bit integer.
 /// The 64 bits of integer correspond to the 8 x 8 squares of the board.
-pub type Point = i64;
+pub type Point = u64;
 
 /// Representation of Othello board.
 #[derive(Clone, Copy)]
 pub struct Board {
-    black_stones: i64,
-    white_stones: i64,
+    black_stones: u64,
+    white_stones: u64,
 }
 
 impl Board {
@@ -47,6 +58,31 @@ impl Board {
         board.set_stone_xy(StoneColor::Black, 3, 4);
         board.set_stone_xy(StoneColor::Black, 4, 3);
         return board;
+    }
+
+    #[inline(always)]
+    pub fn to_point(x: i32, y: i32) -> Point {
+        let x_shift = 7 - x;
+        let y_shift = 7 - y;
+        1_u64 << y_shift * 8 + x_shift
+    }
+
+    /*
+     * Move the point to the next square in the specified direction.
+     */
+    #[inline(always)]
+    pub fn move_point(point: Point, direction: Direction) -> Point {
+        // Move by bit-shifting and mask bits that is out of the board.
+        match direction {
+            Direction::Up               => (point << 8) & 0xffffffffffffff00,
+            Direction::UpperRight       => (point << 7) & 0x7f7f7f7f7f7f7f00,
+            Direction::Right            => (point >> 1) & 0x7f7f7f7f7f7f7f7f,
+            Direction::LowerRight       => (point >> 9) & 0x007f7f7f7f7f7f7f,
+            Direction::Down             => (point >> 8) & 0x00ffffffffffffff,
+            Direction::LowerLeft        => (point >> 7) & 0x00fefefefefefefe,
+            Direction::Left             => (point << 1) & 0xfefefefefefefefe,
+            Direction::UpperLeft        => (point << 9) & 0xfefefefefefefe00,
+        }
     }
 
     #[inline(always)]
@@ -85,12 +121,7 @@ impl Board {
     }
 
     #[inline(always)]
-    pub fn to_point(x: i32, y: i32) -> Point {
-        1_i64 << y * 8 + x
-    }
-
-    #[inline(always)]
-    pub fn get_stones(&self, color: StoneColor) -> i64 {
+    pub fn get_stones(&self, color: StoneColor) -> u64 {
         match color {
             StoneColor::Black => self.black_stones,
             StoneColor::White => self.white_stones,
@@ -98,7 +129,7 @@ impl Board {
     }
 
     #[inline(always)]
-    pub fn get_stones_ref(&mut self, color: StoneColor) -> &mut i64 {
+    pub fn get_stones_ref(&mut self, color: StoneColor) -> &mut u64 {
         match color {
             StoneColor::Black => &mut self.black_stones,
             StoneColor::White => &mut self.white_stones,
