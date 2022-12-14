@@ -1,4 +1,5 @@
-use crate::board::{Board, StoneColor};
+use crate::model::board::Board;
+use crate::StoneColor;
 
 pub struct CuiView {
     black_stone: String,

@@ -1,4 +1,6 @@
-use crate::board::{Board, Point, StoneColor};
+use crate::model::board::Board;
+use crate::model::point::Point;
+use crate::StoneColor;
 
 pub trait Player {
     fn play(&self, board: &Board, color: StoneColor) -> Point;

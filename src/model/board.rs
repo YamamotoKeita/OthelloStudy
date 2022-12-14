@@ -1,4 +1,6 @@
-use std::fmt;
+
+use crate::model::point::Point;
+use crate::StoneColor;
 
 #[derive(Clone, Copy)]
 pub enum Direction {
@@ -11,33 +13,6 @@ pub enum Direction {
     Left,
     UpperLeft,
 }
-
-#[derive(Clone, Copy)]
-pub enum StoneColor {
-    Black,
-    White,
-}
-impl StoneColor {
-    pub fn opposite(&self) -> StoneColor {
-        match self {
-            StoneColor::Black => StoneColor::White,
-            StoneColor::White => StoneColor::Black,
-        }
-    }
-}
-
-impl fmt::Display for StoneColor {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            StoneColor::Black => write!(f, "Black"),
-            StoneColor::White => write!(f, "White"),
-        }
-    }
-}
-
-/// Represents a point on the Othello board as 1 bit of a 64 bit integer.
-/// The 64 bits of integer correspond to the 8 x 8 squares of the board.
-pub type Point = u64;
 
 /// Representation of Othello board.
 #[derive(Clone, Copy)]
@@ -59,6 +34,7 @@ impl Board {
         board.set_stone_xy(StoneColor::Black, 4, 3);
         return board;
     }
+
 
     #[inline(always)]
     pub fn to_point(x: i32, y: i32) -> Point {
