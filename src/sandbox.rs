@@ -1,20 +1,25 @@
+struct SPlayer {}
+impl SPlayer {
+    fn play(&self, sandbox: &Sandbox) {}
+}
+
 struct Sandbox {
-    value: String,
+    player: SPlayer,
 }
 impl Sandbox {
     pub fn start(&mut self) {
-        let mut value = &self.value;
+        let mut player = &self.player;
+        self.change();
 
-        self.change(); // self mutable borrow
-
-        value = &self.value;
-
-        value.as_str(); // value immutable borrow
+        //if true {
+        player = self.get_player();
+        //}
+        player.play(&self);
     }
 
     fn change(&mut self) {}
 
-    fn get_value(&self) -> &String {
-        &self.value
+    fn get_player(&self) -> &SPlayer {
+        &self.player
     }
 }
