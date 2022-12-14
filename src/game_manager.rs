@@ -38,7 +38,7 @@ impl<P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
             let player = self.get_player();
             let point = player.play(&self.board, self.turn_color);
             let before = self.board;
-            self.board.place_stone_at_point(self.turn_color, point);
+            self.board.set_stone(self.turn_color, point);
 
             self.view.place_stone(point, &before, &self.board);
 

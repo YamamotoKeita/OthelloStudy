@@ -42,20 +42,25 @@ impl Board {
             white_stones: 0,
         };
 
-        board.place_stone(StoneColor::White, 3, 3);
-        board.place_stone(StoneColor::White, 4, 4);
-        board.place_stone(StoneColor::Black, 3, 4);
-        board.place_stone(StoneColor::Black, 4, 3);
+        board.set_stone_xy(StoneColor::White, 3, 3);
+        board.set_stone_xy(StoneColor::White, 4, 4);
+        board.set_stone_xy(StoneColor::Black, 3, 4);
+        board.set_stone_xy(StoneColor::Black, 4, 3);
         return board;
     }
 
     #[inline(always)]
-    pub fn place_stone(&mut self, color: StoneColor, x: i32, y: i32) {
-        self.place_stone_at_point(color, Board::to_point(x, y));
+    pub fn place_stone(&mut self, color: StoneColor, point: Point) {
+        // TODO Not yet implemented
     }
 
     #[inline(always)]
-    pub fn place_stone_at_point(&mut self, color: StoneColor, point: Point) {
+    pub fn set_stone_xy(&mut self, color: StoneColor, x: i32, y: i32) {
+        self.set_stone(color, Board::to_point(x, y));
+    }
+
+    #[inline(always)]
+    pub fn set_stone(&mut self, color: StoneColor, point: Point) {
         *self.get_stones_ref(color) |= point;
     }
 
