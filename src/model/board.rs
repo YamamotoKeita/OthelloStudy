@@ -22,7 +22,6 @@ impl Board {
         return board;
     }
 
-    #[inline(always)]
     pub fn place_stone(&mut self, color: StoneColor, point: Point) {
         let mut reversed: u64 = 0;
         let mut player_stones = self.get_stones(color);
@@ -71,8 +70,9 @@ impl Board {
         self.get_stones(color) & point > 0
     }
 
+    #[inline(always)]
     pub fn remove_stone(&mut self, color: StoneColor, point: Point) {
-        // TODO Not yet implemented
+        *self.get_stones_ref(color) &= !point;
     }
 
     pub fn can_play(&self, color: StoneColor) -> bool {
