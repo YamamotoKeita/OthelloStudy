@@ -19,10 +19,11 @@ impl CuiView {
         let border = "  +---+---+---+---+---+---+---+---+\n";
         result.push_str("    A   B   C   D   E   F   G   H\n");
 
-        for x in 0..=7 {
+        for y in 0..=7 {
             result.push_str(border);
-            result.push_str(&((x + 1).to_string() + " "));
-            for y in 0..=7 {
+            result.push_str(&((y + 1).to_string() + " "));
+
+            for x in 0..=7 {
                 result.push_str("| ");
 
                 let stone = if board.has_stone(StoneColor::Black, x, y) {
