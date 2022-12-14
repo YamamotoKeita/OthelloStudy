@@ -4,7 +4,13 @@ pub trait Player {
     fn play(&self, board: &Board, color: StoneColor) -> Point;
 }
 
-pub trait OthelloView {}
+pub trait OthelloView {
+    fn wait_next_move(&self, board: &Board, color: StoneColor);
+    // TODO Should the board args be references?
+    fn place_stone(point: Point, before: &Board, after: &Board);
+    fn skipped(color: StoneColor);
+    fn game_end(board: &Board);
+}
 
 struct GameManager<T: Player, R: Player> {
     board: Board,
@@ -26,12 +32,6 @@ impl<T: Player, R: Player> GameManager<T, R> {
     pub fn start_game(&mut self) {
         let mut player: &dyn Player = &self.first_player;
 
-        // while true {
-        //     let point = player.play(&self.board, self.turn_color);
-        //     self.board.place_stone_at_point(self.turn_color, point);
-        //     player = self.get_player(StoneColor::Black);
-        // }
-
         while true {
             // view.wait_next_move(board, turn_color)
 
@@ -46,10 +46,11 @@ impl<T: Player, R: Player> GameManager<T, R> {
             // Change to next player
             if self.board.can_play(opposite) {
                 self.turn_color = opposite;
-                // player = self.get_player(opposite);
             } else {
                 // view.skipped(color)
             }
+
+            player = self.get_player(self.turn_color);
 
             // The game is over
             if !self.board.can_play(self.turn_color) {

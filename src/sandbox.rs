@@ -1,34 +1,20 @@
-struct Item {}
-impl Item {
-    fn change(&mut self) {}
-}
-
-struct Player {}
-impl Player {
-    fn play(&self) {}
-}
-
 struct Sandbox {
-    item: Item,
-    player: Player,
+    value: String,
 }
 impl Sandbox {
     pub fn start(&mut self) {
-        let mut player = &self.player;
+        let mut value = &self.value;
 
-        while true {
-            player.play();
+        self.change(); // self mutable borrow
 
-            self.item.change();
+        value = &self.value;
 
-            if true {
-                player = self.get_next_player();
-            }
-        }
+        value.as_str(); // value immutable borrow
     }
 
-    #[inline(always)]
-    fn get_next_player(&self) -> &Player {
-        &self.player
+    fn change(&mut self) {}
+
+    fn get_value(&self) -> &String {
+        &self.value
     }
 }

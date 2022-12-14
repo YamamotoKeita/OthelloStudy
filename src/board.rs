@@ -29,6 +29,7 @@ impl fmt::Display for StoneColor {
 pub type Point = i64;
 
 /// Representation of Othello board.
+#[derive(Clone, Copy)]
 pub struct Board {
     black_stones: i64,
     white_stones: i64,
