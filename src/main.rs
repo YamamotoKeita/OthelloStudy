@@ -10,10 +10,5 @@ mod game_manager;
 mod sandbox;
 
 fn main() {
-    let mut board = Board::new();
-    let view = CuiView::new();
-
-    board.place_stone(StoneColor::Black, xy_to_point(3, 2));
-
-    println!("{}", view.to_str(&board));
+    to_point("8B");
 }

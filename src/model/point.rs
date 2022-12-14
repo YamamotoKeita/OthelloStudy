@@ -5,7 +5,7 @@ use crate::Direction;
 pub type Point = u64;
 
 #[inline(always)]
-pub fn xy_to_point(x: i32, y: i32) -> Point {
+pub fn xy_to_point(x: u32, y: u32) -> Point {
     let x_shift = 7 - x;
     let y_shift = 7 - y;
     1_u64 << y_shift * 8 + x_shift
@@ -15,12 +15,45 @@ pub fn xy_to_point(x: i32, y: i32) -> Point {
  * Convert a location text (such as "1A", "3C") to a point.
  */
 pub fn to_point(text: &str) -> Point {
-    // TODO Not yet implemented
-    if text.chars().count() != 2 {
+    if text.len() != 2 || !text.is_ascii() {
         return 0;
     }
 
-    return 0;
+    let mut chars = text.chars();
+    let number = chars.next().unwrap();
+    let alphabet = chars.next().unwrap();
+
+    let y: u32;
+    if let Some(i) = number.to_digit(10) {
+        y = i - 1;
+    } else {
+        return 0;
+    }
+
+    let x: u32;
+    if let Some(i) = alphabet_to_digit(alphabet) {
+        x = i;
+    } else {
+        return 0;
+    }
+
+    println!("x={}, y={}", x, y);
+
+    return xy_to_point(x, y);
+}
+
+#[inline(always)]
+fn alphabet_to_digit(alphabet: char) -> Option<u32> {
+    let i = alphabet as u32;
+
+    if 'A' as u32 <= i && i <= 'H' as u32 {
+        return Some(i - 'A' as u32);
+    }
+    if 'a' as u32 <= i && i <= 'h' as u32 {
+        return Some(i - 'a' as u32);
+    }
+
+    return None;
 }
 
 /*

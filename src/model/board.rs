@@ -50,7 +50,7 @@ impl Board {
     }
 
     #[inline(always)]
-    pub fn set_stone_xy(&mut self, color: StoneColor, x: i32, y: i32) {
+    pub fn set_stone_xy(&mut self, color: StoneColor, x: u32, y: u32) {
         self.set_stone(color, xy_to_point(x, y));
     }
 
@@ -60,7 +60,7 @@ impl Board {
     }
 
     #[inline(always)]
-    pub fn has_stone(&self, color: StoneColor, x: i32, y: i32) -> bool {
+    pub fn has_stone(&self, color: StoneColor, x: u32, y: u32) -> bool {
         let point = xy_to_point(x, y);
         self.has_stone_at_point(color, point)
     }
