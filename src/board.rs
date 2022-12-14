@@ -108,7 +108,7 @@ impl Board {
 
     #[inline(always)]
     pub fn has_stone_at_point(&self, color: StoneColor, point: Point) -> bool {
-        self.get_stones(color) & point == point
+        self.get_stones(color) & point > 0
     }
 
     pub fn remove_stone(&mut self, color: StoneColor, point: Point) {
