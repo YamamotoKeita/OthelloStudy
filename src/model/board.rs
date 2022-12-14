@@ -1,5 +1,5 @@
-use crate::model::point::{Point, to_point};
-use crate::{Direction, StoneColor};
+use crate::model::point::{Point, xy_to_point};
+use crate::{Direction, move_point, point_to_str, StoneColor};
 
 /// Representation of Othello board.
 #[derive(Clone, Copy)]
@@ -24,12 +24,35 @@ impl Board {
 
     #[inline(always)]
     pub fn place_stone(&mut self, color: StoneColor, point: Point) {
-        // TODO Not yet implemented
+        let mut reversed: u64 = 0;
+        let mut player_stones = self.get_stones(color);
+        let mut opponent_stones = self.get_stones(color.opposite());
+
+        for direction in Direction::iterator() {
+            let mut line: u64 = 0;
+            let mut next_point = move_point(point, *direction);
+
+            while (next_point != 0) && ((next_point & opponent_stones) != 0) {
+                line |= next_point;
+                next_point = move_point(next_point, *direction);
+            }
+
+            if (next_point & player_stones) != 0 {
+                reversed |= line;
+            }
+        }
+
+        // Both addition and removal can be done with the XOR operation.
+        player_stones ^= point | reversed;
+        opponent_stones ^= reversed;
+
+        *self.get_stones_ref(color) = player_stones;
+        *self.get_stones_ref(color.opposite()) = opponent_stones;
     }
 
     #[inline(always)]
     pub fn set_stone_xy(&mut self, color: StoneColor, x: i32, y: i32) {
-        self.set_stone(color, to_point(x, y));
+        self.set_stone(color, xy_to_point(x, y));
     }
 
     #[inline(always)]
@@ -39,7 +62,7 @@ impl Board {
 
     #[inline(always)]
     pub fn has_stone(&self, color: StoneColor, x: i32, y: i32) -> bool {
-        let point = to_point(x, y);
+        let point = xy_to_point(x, y);
         self.has_stone_at_point(color, point)
     }
 

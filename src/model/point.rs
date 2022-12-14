@@ -5,10 +5,22 @@ use crate::Direction;
 pub type Point = u64;
 
 #[inline(always)]
-pub fn to_point(x: i32, y: i32) -> Point {
+pub fn xy_to_point(x: i32, y: i32) -> Point {
     let x_shift = 7 - x;
     let y_shift = 7 - y;
     1_u64 << y_shift * 8 + x_shift
+}
+
+/*
+ * Convert a location text (such as "1A", "3C") to a point.
+ */
+pub fn to_point(text: &str) -> Point {
+    // TODO Not yet implemented
+    if text.chars().count() != 2 {
+        return 0;
+    }
+
+    return 0;
 }
 
 /*
@@ -27,4 +39,31 @@ pub fn move_point(point: Point, direction: Direction) -> Point {
         Direction::Left             => (point << 1) & 0xfefefefefefefefe,
         Direction::UpperLeft        => (point << 9) & 0xfefefefefefefe00,
     }
+}
+
+pub fn point_to_str(point: Point) -> String {
+    let mut result = "".to_string();
+
+    let border = "  +---+---+---+---+---+---+---+---+\n";
+    result.push_str("    A   B   C   D   E   F   G   H\n");
+
+    for y in 0..=7 {
+        result.push_str(border);
+        result.push_str(&((y + 1).to_string() + " "));
+
+        for x in 0..=7 {
+            result.push_str("| ");
+            let stone = if (point & xy_to_point(x, y)) != 0 {
+                "◉"
+            } else {
+                " "
+            };
+            result.push_str(stone);
+            result.push_str(" ");
+        }
+        result.push_str("|\n");
+    }
+    result.push_str(border);
+
+    return result;
 }
