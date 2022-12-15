@@ -15,7 +15,7 @@ impl CuiPlayer {
 
 impl Player for CuiPlayer {
     fn play(&self, board: &Board, color: StoneColor) -> Points {
-        println!("Enter the place. (e.g. \"4C\" or \"4c\")");
+        println!("Enter the place. (e.g. \"F5\" or \"f5\")");
 
         loop {
             let mut input = String::new();

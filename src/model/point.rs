@@ -32,19 +32,19 @@ pub fn to_point(text: &str) -> Option<Points> {
     }
 
     let mut chars = text.chars();
-    let number = chars.next().unwrap();
     let alphabet = chars.next().unwrap();
-
-    let y: u32;
-    if let Some(i) = number.to_digit(10) {
-        y = i - 1;
-    } else {
-        return None;
-    }
+    let number = chars.next().unwrap();
 
     let x: u32;
     if let Some(i) = alphabet_to_digit(alphabet) {
         x = i;
+    } else {
+        return None;
+    }
+
+    let y: u32;
+    if let Some(i) = number.to_digit(10) {
+        y = i - 1;
     } else {
         return None;
     }
