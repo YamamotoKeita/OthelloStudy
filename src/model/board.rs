@@ -1,5 +1,5 @@
-use crate::model::point::{Points, xy_to_point};
-use crate::{Direction, move_point, point_to_str, StoneColor};
+use crate::model::point::*;
+use crate::{Direction, shift_points, points_to_str, StoneColor};
 
 /// Representation of Othello board.
 #[derive(Clone, Copy)]
@@ -15,10 +15,10 @@ impl Board {
             white_stones: 0,
         };
 
-        board.set_stone_xy(StoneColor::White, 3, 3);
-        board.set_stone_xy(StoneColor::White, 4, 4);
         board.set_stone_xy(StoneColor::Black, 3, 4);
         board.set_stone_xy(StoneColor::Black, 4, 3);
+        board.set_stone_xy(StoneColor::White, 3, 3);
+        board.set_stone_xy(StoneColor::White, 4, 4);
         return board;
     }
 
@@ -29,11 +29,11 @@ impl Board {
 
         for direction in Direction::iterator() {
             let mut line: u64 = 0;
-            let mut next_point = move_point(point, *direction);
+            let mut next_point = shift_points(point, *direction);
 
             while (next_point != 0) && ((next_point & opponent_stones) != 0) {
                 line |= next_point;
-                next_point = move_point(next_point, *direction);
+                next_point = shift_points(next_point, *direction);
             }
 
             if (next_point & player_stones) != 0 {
@@ -77,7 +77,41 @@ impl Board {
 
     pub fn can_play(&self, color: StoneColor) -> bool {
         // TODO Not yet implemented
+
         true
+    }
+
+    pub fn placeable_points(&self, color: StoneColor) -> Points {
+        let player_stones = self.get_stones(color);
+        let opponent_stones = self.get_stones(color.opposite());
+
+        let horizontal_targets = opponent_stones & MASK_LEFT_RIGHT_ZERO;
+        let vertical_targets = opponent_stones & MASK_TOP_BOTTOM_ZERO;
+        let diagonal_targets = opponent_stones & MASK_ALL_SIDES_ZERO;
+
+        let vacant_points = !(player_stones | opponent_stones);
+
+        let mut result: u64 = 0;
+
+        for direction in Direction::iterator() {
+            let targets = match *direction {
+                Direction::Left | Direction::Right => horizontal_targets,
+                Direction::Up | Direction::Down => vertical_targets,
+                _ => diagonal_targets,
+            };
+
+            // Shift the player stones 6 squares and mark where the opponent stones are in the direction of movement.
+            let mut tmp= targets & shift_points_without_guard(player_stones, *direction);
+            for n in 1..=5 {
+                tmp |= targets & shift_points_without_guard(tmp, *direction);
+            }
+
+            let placeable_points = vacant_points & shift_points_without_guard(tmp, *direction);
+
+            result |= placeable_points;
+        }
+
+        return result;
     }
 
     #[inline(always)]

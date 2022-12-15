@@ -1,6 +1,18 @@
 use crate::Direction;
 
-/// Represents points on the Othello board as bits in a 64 bit integer.
+pub const MASK_BOTTOM_ZERO: u64         = 0xffffffffffffff00;
+pub const MASK_LEFT_BOTTOM_ZERO: u64    = 0x7f7f7f7f7f7f7f00;
+pub const MASK_LEFT_ZERO: u64           = 0x7f7f7f7f7f7f7f7f;
+pub const MASK_TOP_LEFT_ZERO: u64       = 0x007f7f7f7f7f7f7f;
+pub const MASK_TOP_ZERO: u64            = 0x00ffffffffffffff;
+pub const MASK_TOP_RIGHT_ZERO: u64      = 0x00fefefefefefefe;
+pub const MASK_RIGHT_ZERO: u64          = 0xfefefefefefefefe;
+pub const MASK_RIGHT_BOTTOM_ZERO: u64   = 0xfefefefefefefe00;
+pub const MASK_LEFT_RIGHT_ZERO: u64     = 0x7e7e7e7e7e7e7e7e;
+pub const MASK_TOP_BOTTOM_ZERO: u64     = 0x00FFFFFFFFFFFF00;
+pub const MASK_ALL_SIDES_ZERO: u64      = 0x007e7e7e7e7e7e00;
+
+/// Represents specific points on the Othello board as bits in a 64 bit integer.
 /// The 64 bits of integer correspond to the 64 (8 x 8) squares of Othello board.
 pub type Points = u64;
 
@@ -37,8 +49,6 @@ pub fn to_point(text: &str) -> Option<Points> {
         return None;
     }
 
-    println!("x={}, y={}", x, y);
-
     return Some(xy_to_point(x, y));
 }
 
@@ -60,43 +70,53 @@ fn alphabet_to_digit(alphabet: char) -> Option<u32> {
  * Move the point to the next square in the specified direction.
  */
 #[inline(always)]
-pub fn move_point(point: Points, direction: Direction) -> Points {
+pub fn shift_points(points: Points, direction: Direction) -> Points {
     // Move by bit-shifting and mask bits that is out of the board.
     match direction {
-        Direction::Up               => (point << 8) & 0xffffffffffffff00,
-        Direction::UpperRight       => (point << 7) & 0x7f7f7f7f7f7f7f00,
-        Direction::Right            => (point >> 1) & 0x7f7f7f7f7f7f7f7f,
-        Direction::LowerRight       => (point >> 9) & 0x007f7f7f7f7f7f7f,
-        Direction::Down             => (point >> 8) & 0x00ffffffffffffff,
-        Direction::LowerLeft        => (point >> 7) & 0x00fefefefefefefe,
-        Direction::Left             => (point << 1) & 0xfefefefefefefefe,
-        Direction::UpperLeft        => (point << 9) & 0xfefefefefefefe00,
+        Direction::Up               => (points << 8) & MASK_BOTTOM_ZERO,
+        Direction::UpperRight       => (points << 7) & MASK_LEFT_BOTTOM_ZERO,
+        Direction::Right            => (points >> 1) & MASK_LEFT_ZERO,
+        Direction::LowerRight       => (points >> 9) & MASK_TOP_LEFT_ZERO,
+        Direction::Down             => (points >> 8) & MASK_TOP_ZERO,
+        Direction::LowerLeft        => (points >> 7) & MASK_TOP_RIGHT_ZERO,
+        Direction::Left             => (points << 1) & MASK_RIGHT_ZERO,
+        Direction::UpperLeft        => (points << 9) & MASK_RIGHT_BOTTOM_ZERO,
     }
 }
 
-pub fn point_to_str(point: Points) -> String {
+#[inline(always)]
+pub fn shift_points_without_guard(points: Points, direction: Direction) -> Points {
+    match direction {
+        Direction::Up               => (points << 8),
+        Direction::UpperRight       => (points << 7),
+        Direction::Right            => (points >> 1),
+        Direction::LowerRight       => (points >> 9),
+        Direction::Down             => (points >> 8),
+        Direction::LowerLeft        => (points >> 7),
+        Direction::Left             => (points << 1),
+        Direction::UpperLeft        => (points << 9),
+    }
+}
+
+pub fn points_to_str(points: Points) -> String {
     let mut result = "".to_string();
 
-    let border = "  +---+---+---+---+---+---+---+---+\n";
-    result.push_str("    A   B   C   D   E   F   G   H\n");
+    result.push_str("  A B C D E F G H\n");
 
     for y in 0..=7 {
-        result.push_str(border);
-        result.push_str(&((y + 1).to_string() + " "));
+        result.push_str(&((y + 1).to_string()));
 
         for x in 0..=7 {
-            result.push_str("| ");
-            let stone = if (point & xy_to_point(x, y)) != 0 {
-                "◉"
-            } else {
-                " "
-            };
-            result.push_str(stone);
             result.push_str(" ");
+            let square = if (points & xy_to_point(x, y)) != 0 {
+                "■"
+            } else {
+                "□"
+            };
+            result.push_str(square);
         }
-        result.push_str("|\n");
+        result.push_str("\n");
     }
-    result.push_str(border);
 
     return result;
 }
