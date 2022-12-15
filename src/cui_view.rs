@@ -60,7 +60,7 @@ impl OthelloView for CuiView  {
         println!("{}", text);
 
         let stone = self.get_stone_ref(color);
-        println!("{} turn", stone);
+        println!("{} Turn", stone);
     }
 
     fn place_stone(&self, point: Points, before: &Board, after: &Board) {

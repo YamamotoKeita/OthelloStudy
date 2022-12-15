@@ -83,6 +83,10 @@ impl Board {
         self.placeable_points(color) != 0
     }
 
+    pub fn can_place(&self, color: StoneColor, point: Points) -> bool {
+        self.placeable_points(color) & point != 0
+    }
+
     pub fn placeable_points(&self, color: StoneColor) -> Points {
         let player_stones = self.get_stones(color);
         let opponent_stones = self.get_stones(color.opposite());

@@ -13,8 +13,7 @@ pub trait OthelloView {
     fn game_end(&self, board: &Board);
 }
 
-struct GameManager<P1: Player, P2: Player, View: OthelloView> {
-    board: Board,
+pub struct GameManager<P1: Player, P2: Player, View: OthelloView> {
     first_player: P1,
     second_player: P2,
     view: View,
@@ -23,7 +22,6 @@ struct GameManager<P1: Player, P2: Player, View: OthelloView> {
 impl<P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
     pub fn new(first_player: P1, second_player: P2, view: View) -> GameManager<P1, P2, View> {
         GameManager {
-            board: Board::new(),
             first_player,
             second_player,
             view,
@@ -31,35 +29,36 @@ impl<P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
     }
 
     pub fn start_game(&mut self) {
+        let mut board = Board::new();
         let mut turn = StoneColor::First;
 
-        while true {
-            self.view.wait_next_move(&self.board, turn);
+        loop {
+            self.view.wait_next_move(&board, turn);
 
             // Place a stone
             let player = self.get_player(turn);
-            let point = player.play(&self.board, turn);
-            let before = self.board;
-            self.board.set_stone(turn, point);
+            let point = player.play(&board, turn);
+            let before = board;
+            board.place_stone(turn, point);
 
-            self.view.place_stone(point, &before, &self.board);
+            self.view.place_stone(point, &before, &board);
 
             let opposite_color = turn.opposite();
 
             // Change to next player
-            if self.board.can_play(opposite_color) {
+            if board.can_play(opposite_color) {
                 turn = opposite_color;
             } else {
-                self.view.skipped(opposite_color)
-            }
-
-            // The game is over
-            if !self.board.can_play(turn) {
-                break;
+                if board.can_play(turn) {
+                    self.view.skipped(opposite_color)
+                } else {
+                    // The game is over
+                    break;
+                }
             }
         }
 
-        self.view.game_end(&self.board);
+        self.view.game_end(&board);
     }
 
     fn get_player(&self, color: StoneColor) -> &dyn Player {
