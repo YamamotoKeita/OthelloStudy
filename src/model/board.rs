@@ -75,6 +75,10 @@ impl Board {
         *self.get_stones_ref(color) &= !point;
     }
 
+    pub fn count_stones(&self, color: StoneColor) -> u32 {
+        self.get_stones(color).count_ones()
+    }
+
     pub fn can_play(&self, color: StoneColor) -> bool {
         self.placeable_points(color) != 0
     }
