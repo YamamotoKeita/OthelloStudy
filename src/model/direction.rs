@@ -15,7 +15,6 @@ pub enum Direction {
 
 impl Direction {
     pub fn iterator() -> Iter<'static, Direction> {
-        // TODO Check the behavior of this static
         static DIRECTIONS: [Direction; 8] = [Up, UpperRight, Right, LowerRight, Down, LowerLeft, Left, UpperLeft];
         DIRECTIONS.iter()
     }
