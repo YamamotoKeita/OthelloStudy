@@ -14,9 +14,9 @@ pub fn xy_to_point(x: u32, y: u32) -> Point {
 /*
  * Convert a location text (such as "1A", "3C") to a point.
  */
-pub fn to_point(text: &str) -> Point {
+pub fn to_point(text: &str) -> Option<Point> {
     if text.len() != 2 || !text.is_ascii() {
-        return 0;
+        return None;
     }
 
     let mut chars = text.chars();
@@ -27,19 +27,19 @@ pub fn to_point(text: &str) -> Point {
     if let Some(i) = number.to_digit(10) {
         y = i - 1;
     } else {
-        return 0;
+        return None;
     }
 
     let x: u32;
     if let Some(i) = alphabet_to_digit(alphabet) {
         x = i;
     } else {
-        return 0;
+        return None;
     }
 
     println!("x={}, y={}", x, y);
 
-    return xy_to_point(x, y);
+    return Some(xy_to_point(x, y));
 }
 
 #[inline(always)]
