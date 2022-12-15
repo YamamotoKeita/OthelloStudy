@@ -10,6 +10,8 @@ mod model;
 mod cui_view;
 mod game_manager;
 mod cui_player;
+mod searcher;
+mod evaluator;
 
 fn main() {
     let player1 = CuiPlayer::new();
