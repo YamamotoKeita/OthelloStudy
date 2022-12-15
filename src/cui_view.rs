@@ -4,15 +4,15 @@ use crate::model::point::Points;
 use crate::StoneColor;
 
 pub struct CuiView {
-    first_stone: String,
-    second_stone: String,
+    player1_stone: String,
+    player2_stone: String,
 }
 
 impl CuiView {
     pub fn new() -> CuiView {
         CuiView {
-            first_stone: "○".to_string(),
-            second_stone: "●".to_string(),
+            player1_stone: "○".to_string(),
+            player2_stone: "●".to_string(),
         }
     }
 
@@ -30,9 +30,9 @@ impl CuiView {
                 result.push_str("| ");
 
                 let stone = if board.has_stone(StoneColor::First, x, y) {
-                    &self.first_stone
+                    &self.player1_stone
                 } else if board.has_stone(StoneColor::Second, x, y) {
-                    &self.second_stone
+                    &self.player2_stone
                 } else {
                     " "
                 };
@@ -48,8 +48,8 @@ impl CuiView {
 
     pub fn get_stone_ref(&self, color: StoneColor) -> &String {
         match color {
-            StoneColor::First => &self.first_stone,
-            StoneColor::Second => &self.second_stone,
+            StoneColor::First => &self.player1_stone,
+            StoneColor::Second => &self.player2_stone,
         }
     }
 }
@@ -76,6 +76,6 @@ impl OthelloView for CuiView  {
         println!("Game End");
         let first_count = board.count_stones(StoneColor::First).to_string();
         let second_count = board.count_stones(StoneColor::Second).to_string();
-        println!("{}: {}, {}: {}", self.first_stone, first_count, self.second_stone, second_count);
+        println!("{}: {}, {}: {}", self.player1_stone, first_count, self.player2_stone, second_count);
     }
 }

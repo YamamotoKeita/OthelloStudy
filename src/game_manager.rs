@@ -18,7 +18,6 @@ struct GameManager<P1: Player, P2: Player, View: OthelloView> {
     first_player: P1,
     second_player: P2,
     view: View,
-    turn_color: StoneColor,
 }
 
 impl<P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
@@ -28,33 +27,34 @@ impl<P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
             first_player,
             second_player,
             view,
-            turn_color: StoneColor::First,
         }
     }
 
     pub fn start_game(&mut self) {
+        let mut turn = StoneColor::First;
+
         while true {
-            self.view.wait_next_move(&self.board, self.turn_color);
+            self.view.wait_next_move(&self.board, turn);
 
             // Place a stone
-            let player = self.get_player();
-            let point = player.play(&self.board, self.turn_color);
+            let player = self.get_player(turn);
+            let point = player.play(&self.board, turn);
             let before = self.board;
-            self.board.set_stone(self.turn_color, point);
+            self.board.set_stone(turn, point);
 
             self.view.place_stone(point, &before, &self.board);
 
-            let opposite_color = self.turn_color.opposite();
+            let opposite_color = turn.opposite();
 
             // Change to next player
             if self.board.can_play(opposite_color) {
-                self.turn_color = opposite_color;
+                turn = opposite_color;
             } else {
                 self.view.skipped(opposite_color)
             }
 
             // The game is over
-            if !self.board.can_play(self.turn_color) {
+            if !self.board.can_play(turn) {
                 break;
             }
         }
@@ -62,8 +62,8 @@ impl<P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
         self.view.game_end(&self.board);
     }
 
-    fn get_player(&self) -> &dyn Player {
-        match self.turn_color {
+    fn get_player(&self, color: StoneColor) -> &dyn Player {
+        match color {
             StoneColor::First => &self.first_player,
             StoneColor::Second => &self.second_player,
         }

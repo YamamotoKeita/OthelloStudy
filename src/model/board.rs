@@ -4,15 +4,15 @@ use crate::{Direction, shift_points, points_to_str, StoneColor};
 /// Representation of Othello board.
 #[derive(Clone, Copy)]
 pub struct Board {
-    first_stones: u64,
-    second_stones: u64,
+    player1_stones: u64,
+    player2_stones: u64,
 }
 
 impl Board {
     pub fn new() -> Board {
         let mut board = Board {
-            first_stones: 0,
-            second_stones: 0,
+            player1_stones: 0,
+            player2_stones: 0,
         };
 
         board.set_stone_xy(StoneColor::First, 3, 4);
@@ -119,16 +119,16 @@ impl Board {
     #[inline(always)]
     pub fn get_stones(&self, color: StoneColor) -> u64 {
         match color {
-            StoneColor::First => self.first_stones,
-            StoneColor::Second => self.second_stones,
+            StoneColor::First => self.player1_stones,
+            StoneColor::Second => self.player2_stones,
         }
     }
 
     #[inline(always)]
     pub fn get_stones_ref(&mut self, color: StoneColor) -> &mut u64 {
         match color {
-            StoneColor::First => &mut self.first_stones,
-            StoneColor::Second => &mut self.second_stones,
+            StoneColor::First => &mut self.player1_stones,
+            StoneColor::Second => &mut self.player2_stones,
         }
     }
 }
