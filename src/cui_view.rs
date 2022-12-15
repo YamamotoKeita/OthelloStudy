@@ -4,15 +4,15 @@ use crate::model::point::Points;
 use crate::StoneColor;
 
 pub struct CuiView {
-    black_stone: String,
-    white_stone: String,
+    first_stone: String,
+    second_stone: String,
 }
 
 impl CuiView {
     pub fn new() -> CuiView {
         CuiView {
-            black_stone: "○".to_string(),
-            white_stone: "●".to_string(),
+            first_stone: "○".to_string(),
+            second_stone: "●".to_string(),
         }
     }
 
@@ -29,10 +29,10 @@ impl CuiView {
             for x in 0..=7 {
                 result.push_str("| ");
 
-                let stone = if board.has_stone(StoneColor::Black, x, y) {
-                    &self.black_stone
-                } else if board.has_stone(StoneColor::White, x, y) {
-                    &self.white_stone
+                let stone = if board.has_stone(StoneColor::First, x, y) {
+                    &self.first_stone
+                } else if board.has_stone(StoneColor::Second, x, y) {
+                    &self.second_stone
                 } else {
                     " "
                 };
@@ -48,8 +48,8 @@ impl CuiView {
 
     pub fn get_stone_ref(&self, color: StoneColor) -> &String {
         match color {
-            StoneColor::Black => &self.black_stone,
-            StoneColor::White => &self.white_stone,
+            StoneColor::First => &self.first_stone,
+            StoneColor::Second => &self.second_stone,
         }
     }
 }
@@ -74,8 +74,8 @@ impl OthelloView for CuiView  {
 
     fn game_end(&self, board: &Board) {
         println!("Game End");
-        let black_count = board.count_stones(StoneColor::Black).to_string();
-        let white_count = board.count_stones(StoneColor::White).to_string();
-        println!("{}: {}, {}: {}", self.black_stone, black_count, self.white_stone, white_count);
+        let first_count = board.count_stones(StoneColor::First).to_string();
+        let second_count = board.count_stones(StoneColor::Second).to_string();
+        println!("{}: {}, {}: {}", self.first_stone, first_count, self.second_stone, second_count);
     }
 }

@@ -11,7 +11,7 @@ mod sandbox;
 
 fn main() {
     let board = Board::new();
-    let points = board.placeable_points(StoneColor::Black);
+    let points = board.placeable_points(StoneColor::First);
 
     println!("{}", points_to_str(points));
 }

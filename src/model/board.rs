@@ -4,21 +4,21 @@ use crate::{Direction, shift_points, points_to_str, StoneColor};
 /// Representation of Othello board.
 #[derive(Clone, Copy)]
 pub struct Board {
-    black_stones: u64,
-    white_stones: u64,
+    first_stones: u64,
+    second_stones: u64,
 }
 
 impl Board {
     pub fn new() -> Board {
         let mut board = Board {
-            black_stones: 0,
-            white_stones: 0,
+            first_stones: 0,
+            second_stones: 0,
         };
 
-        board.set_stone_xy(StoneColor::Black, 3, 4);
-        board.set_stone_xy(StoneColor::Black, 4, 3);
-        board.set_stone_xy(StoneColor::White, 3, 3);
-        board.set_stone_xy(StoneColor::White, 4, 4);
+        board.set_stone_xy(StoneColor::First, 3, 4);
+        board.set_stone_xy(StoneColor::First, 4, 3);
+        board.set_stone_xy(StoneColor::Second, 3, 3);
+        board.set_stone_xy(StoneColor::Second, 4, 4);
         return board;
     }
 
@@ -119,16 +119,16 @@ impl Board {
     #[inline(always)]
     pub fn get_stones(&self, color: StoneColor) -> u64 {
         match color {
-            StoneColor::Black => self.black_stones,
-            StoneColor::White => self.white_stones,
+            StoneColor::First => self.first_stones,
+            StoneColor::Second => self.second_stones,
         }
     }
 
     #[inline(always)]
     pub fn get_stones_ref(&mut self, color: StoneColor) -> &mut u64 {
         match color {
-            StoneColor::Black => &mut self.black_stones,
-            StoneColor::White => &mut self.white_stones,
+            StoneColor::First => &mut self.first_stones,
+            StoneColor::Second => &mut self.second_stones,
         }
     }
 }

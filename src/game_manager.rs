@@ -28,7 +28,7 @@ impl<P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
             first_player,
             second_player,
             view,
-            turn_color: StoneColor::Black,
+            turn_color: StoneColor::First,
         }
     }
 
@@ -64,8 +64,8 @@ impl<P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
 
     fn get_player(&self) -> &dyn Player {
         match self.turn_color {
-            StoneColor::Black => &self.first_player,
-            StoneColor::White => &self.second_player,
+            StoneColor::First => &self.first_player,
+            StoneColor::Second => &self.second_player,
         }
     }
 }
