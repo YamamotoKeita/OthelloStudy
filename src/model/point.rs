@@ -87,17 +87,18 @@ pub fn shift_points(points: Points, direction: Direction) -> Points {
 #[inline(always)]
 pub fn shift_points_without_guard(points: Points, direction: Direction) -> Points {
     match direction {
-        Direction::Up               => (points << 8),
-        Direction::UpperRight       => (points << 7),
-        Direction::Right            => (points >> 1),
-        Direction::LowerRight       => (points >> 9),
-        Direction::Down             => (points >> 8),
-        Direction::LowerLeft        => (points >> 7),
-        Direction::Left             => (points << 1),
-        Direction::UpperLeft        => (points << 9),
+        Direction::Up               => points << 8,
+        Direction::UpperRight       => points << 7,
+        Direction::Right            => points >> 1,
+        Direction::LowerRight       => points >> 9,
+        Direction::Down             => points >> 8,
+        Direction::LowerLeft        => points >> 7,
+        Direction::Left             => points << 1,
+        Direction::UpperLeft        => points << 9,
     }
 }
 
+#[allow(dead_code)]
 pub fn points_to_str(points: Points) -> String {
     let mut result = "".to_string();
 

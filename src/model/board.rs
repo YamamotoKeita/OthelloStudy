@@ -1,5 +1,5 @@
 use crate::model::point::*;
-use crate::{Direction, shift_points, points_to_str, StoneColor};
+use crate::{Direction, shift_points, StoneColor};
 
 /// Representation of Othello board.
 #[derive(Clone, Copy)]
@@ -70,6 +70,7 @@ impl Board {
         self.get_stones(color) & point > 0
     }
 
+    #[allow(dead_code)]
     #[inline(always)]
     pub fn remove_stone(&mut self, color: StoneColor, point: Points) {
         *self.get_stones_ref(color) &= !point;
@@ -108,7 +109,7 @@ impl Board {
 
             // Shift the player stones 6 squares and mark where the opponent stones are in the direction of movement.
             let mut tmp= targets & shift_points_without_guard(player_stones, *direction);
-            for n in 1..=5 {
+            for _ in 0..5 {
                 tmp |= targets & shift_points_without_guard(tmp, *direction);
             }
 

@@ -9,7 +9,6 @@ use crate::game_manager::*;
 mod model;
 mod cui_view;
 mod game_manager;
-mod sandbox;
 mod cui_player;
 
 fn main() {
