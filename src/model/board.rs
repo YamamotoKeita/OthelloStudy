@@ -1,4 +1,4 @@
-use crate::model::point::{Point, xy_to_point};
+use crate::model::point::{Points, xy_to_point};
 use crate::{Direction, move_point, point_to_str, StoneColor};
 
 /// Representation of Othello board.
@@ -22,7 +22,7 @@ impl Board {
         return board;
     }
 
-    pub fn place_stone(&mut self, color: StoneColor, point: Point) {
+    pub fn place_stone(&mut self, color: StoneColor, point: Points) {
         let mut reversed: u64 = 0;
         let mut player_stones = self.get_stones(color);
         let mut opponent_stones = self.get_stones(color.opposite());
@@ -55,7 +55,7 @@ impl Board {
     }
 
     #[inline(always)]
-    pub fn set_stone(&mut self, color: StoneColor, point: Point) {
+    pub fn set_stone(&mut self, color: StoneColor, point: Points) {
         *self.get_stones_ref(color) |= point;
     }
 
@@ -66,12 +66,12 @@ impl Board {
     }
 
     #[inline(always)]
-    pub fn has_stone_at_point(&self, color: StoneColor, point: Point) -> bool {
+    pub fn has_stone_at_point(&self, color: StoneColor, point: Points) -> bool {
         self.get_stones(color) & point > 0
     }
 
     #[inline(always)]
-    pub fn remove_stone(&mut self, color: StoneColor, point: Point) {
+    pub fn remove_stone(&mut self, color: StoneColor, point: Points) {
         *self.get_stones_ref(color) &= !point;
     }
 

@@ -1,14 +1,14 @@
 use crate::model::board::Board;
-use crate::model::point::Point;
+use crate::model::point::Points;
 use crate::StoneColor;
 
 pub trait Player {
-    fn play(&self, board: &Board, color: StoneColor) -> Point;
+    fn play(&self, board: &Board, color: StoneColor) -> Points;
 }
 
 pub trait OthelloView {
     fn wait_next_move(&self, board: &Board, color: StoneColor);
-    fn place_stone(&self, point: Point, before: &Board, after: &Board);
+    fn place_stone(&self, point: Points, before: &Board, after: &Board);
     fn skipped(&self, color: StoneColor);
     fn game_end(&self, board: &Board);
 }

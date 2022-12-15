@@ -1,11 +1,11 @@
 use crate::Direction;
 
-/// Represents a point on the Othello board as 1 bit of a 64 bit integer.
-/// The 64 bits of integer correspond to the 8 x 8 squares of the board.
-pub type Point = u64;
+/// Represents points on the Othello board as bits in a 64 bit integer.
+/// The 64 bits of integer correspond to the 64 (8 x 8) squares of Othello board.
+pub type Points = u64;
 
 #[inline(always)]
-pub fn xy_to_point(x: u32, y: u32) -> Point {
+pub fn xy_to_point(x: u32, y: u32) -> Points {
     let x_shift = 7 - x;
     let y_shift = 7 - y;
     1_u64 << y_shift * 8 + x_shift
@@ -14,7 +14,7 @@ pub fn xy_to_point(x: u32, y: u32) -> Point {
 /*
  * Convert a location text (such as "1A", "3C") to a point.
  */
-pub fn to_point(text: &str) -> Option<Point> {
+pub fn to_point(text: &str) -> Option<Points> {
     if text.len() != 2 || !text.is_ascii() {
         return None;
     }
@@ -60,7 +60,7 @@ fn alphabet_to_digit(alphabet: char) -> Option<u32> {
  * Move the point to the next square in the specified direction.
  */
 #[inline(always)]
-pub fn move_point(point: Point, direction: Direction) -> Point {
+pub fn move_point(point: Points, direction: Direction) -> Points {
     // Move by bit-shifting and mask bits that is out of the board.
     match direction {
         Direction::Up               => (point << 8) & 0xffffffffffffff00,
@@ -74,7 +74,7 @@ pub fn move_point(point: Point, direction: Direction) -> Point {
     }
 }
 
-pub fn point_to_str(point: Point) -> String {
+pub fn point_to_str(point: Points) -> String {
     let mut result = "".to_string();
 
     let border = "  +---+---+---+---+---+---+---+---+\n";
