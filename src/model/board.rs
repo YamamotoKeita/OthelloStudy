@@ -76,9 +76,7 @@ impl Board {
     }
 
     pub fn can_play(&self, color: StoneColor) -> bool {
-        // TODO Not yet implemented
-
-        true
+        self.placeable_points(color) != 0
     }
 
     pub fn placeable_points(&self, color: StoneColor) -> Points {
