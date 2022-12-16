@@ -2,7 +2,6 @@ use std::cmp::max;
 use crate::{Board, Points, StoneColor};
 use crate::evaluator::Evaluator;
 use crate::searcher::Searcher;
-use crate::util::for_n;
 
 struct AlphaBeta<T: Evaluator> {
     evaluator: T,

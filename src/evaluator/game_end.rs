@@ -9,9 +9,9 @@ impl Evaluator for GameEndEvaluator {
         let count1 = board.count_stones(StoneColor::First);
         let count2 = board.count_stones(StoneColor::First);
         let mut point = count1 - count2;
-        if point > 0 {
+        if point > 0_u32 {
             point += 100;
-        } else if point < 0 {
+        } else if point < 0_u32 {
             point -= 100;
         }
         point as i32
