@@ -1,6 +1,7 @@
 use crate::Board;
 
 mod cell_weight;
+mod game_end;
 
 pub trait Evaluator {
     /*
