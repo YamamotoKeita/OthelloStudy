@@ -4,8 +4,8 @@ use crate::{Direction, shift_points, StoneColor};
 /// Representation of Othello board.
 #[derive(Clone, Copy)]
 pub struct Board {
-    player1_stones: u64,
-    player2_stones: u64,
+    pub player1_stones: Points,
+    pub player2_stones: Points,
 }
 
 impl Board {

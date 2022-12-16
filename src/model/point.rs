@@ -14,6 +14,7 @@ pub const MASK_ALL_SIDES_ZERO: u64      = 0x007e7e7e7e7e7e00;
 
 /// Represents specific points on the Othello board as bits in a 64 bit integer.
 /// The 64 bits of integer correspond to the 64 (8 x 8) squares of Othello board.
+/// The first(smallest) bit represents the bottom right square and the last bit represents the top left square.
 pub type Points = u64;
 
 #[inline(always)]
