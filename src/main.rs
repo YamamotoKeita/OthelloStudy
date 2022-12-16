@@ -12,6 +12,7 @@ mod game_manager;
 mod cui_player;
 mod searcher;
 mod evaluator;
+mod util;
 
 fn main() {
     let player1 = CuiPlayer::new();
