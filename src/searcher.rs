@@ -1,6 +1,7 @@
-use crate::Board;
-use crate::evaluator::Evaluator;
+mod alpha_beta;
+
+use crate::{Board, Points};
 
 pub trait Searcher {
-    fn search(&self, board: &Board, evaluator: dyn Evaluator) -> i32;
+    fn search(&self, board: &Board) -> Points;
 }

@@ -1,4 +1,4 @@
-use crate::{Board, Points, StoneColor};
+use crate::{Board, Points};
 use crate::evaluator::Evaluator;
 
 const CELL_WEIGHT: [i32; 64] = [

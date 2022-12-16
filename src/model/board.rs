@@ -22,7 +22,7 @@ impl Board {
         return board;
     }
 
-    pub fn place_stone(&mut self, color: StoneColor, point: Points) {
+    pub fn place_stone(&self, color: StoneColor, point: Points) -> Board {
         let mut reversed: u64 = 0;
         let mut player_stones = self.get_stones(color);
         let mut opponent_stones = self.get_stones(color.opposite());
@@ -45,8 +45,10 @@ impl Board {
         player_stones ^= point | reversed;
         opponent_stones ^= reversed;
 
-        *self.get_stones_ref(color) = player_stones;
-        *self.get_stones_ref(color.opposite()) = opponent_stones;
+        match color {
+            StoneColor::First => Board {player1_stones: player_stones, player2_stones: opponent_stones},
+            StoneColor::Second => Board {player1_stones: opponent_stones, player2_stones: player_stones}
+        }
     }
 
     #[inline(always)]

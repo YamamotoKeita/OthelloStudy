@@ -19,7 +19,7 @@ pub struct GameManager<P1: Player, P2: Player, View: OthelloView> {
     view: View,
 }
 
-impl<P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
+impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
     pub fn new(first_player: P1, second_player: P2, view: View) -> GameManager<P1, P2, View> {
         GameManager {
             first_player,
@@ -38,24 +38,24 @@ impl<P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
             // Place a stone
             let player = self.get_player(turn);
             let point = player.play(&board, turn);
-            let before = board;
-            board.place_stone(turn, point);
+            let new_board = board.place_stone(turn, point);
 
-            self.view.place_stone(point, &before, &board);
+            self.view.place_stone(point, &board, &new_board);
 
             let opposite_color = turn.opposite();
 
             // Change to next player
-            if board.can_play(opposite_color) {
+            if new_board.can_play(opposite_color) {
                 turn = opposite_color;
             } else {
-                if board.can_play(turn) {
+                if new_board.can_play(turn) {
                     self.view.skipped(opposite_color)
                 } else {
                     // The game is over
                     break;
                 }
             }
+            board = new_board;
         }
 
         self.view.game_end(&board);

@@ -1,4 +1,4 @@
-use crate::{Board, Points, StoneColor};
+use crate::{Board, StoneColor};
 use crate::evaluator::Evaluator;
 
 
