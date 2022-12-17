@@ -3,11 +3,11 @@ use crate::model::point::Points;
 use crate::PlayerType;
 
 pub trait Player {
-    fn play(&self, board: &Board, player: PlayerType) -> Points;
+    fn play(&self, board: &Board) -> Points;
 }
 
 pub trait OthelloView {
-    fn wait_next_move(&self, board: &Board, player: PlayerType);
+    fn wait_next_move(&self, board: &Board);
     fn place_stone(&self, point: Points, before: &Board, after: &Board);
     fn skipped(&self, player: PlayerType);
     fn game_end(&self, board: &Board);
@@ -30,31 +30,26 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
 
     pub fn start_game(&mut self) {
         let mut board = Board::new();
-        let mut turn = PlayerType::First;
 
         loop {
-            self.view.wait_next_move(&board, turn);
+            self.view.wait_next_move(&board);
 
             // Place a stone
-            let player = self.get_player(turn);
-            let point = player.play(&board, turn);
-            let new_board = board.place_stone(turn, point);
-
+            let player_type = board.next_player.unwrap();
+            let player = self.get_player(player_type);
+            let point = player.play(&board);
+            let new_board = board.place_stone(point);
             self.view.place_stone(point, &board, &new_board);
 
-            let opposite_player = turn.opposite();
-
-            // Change to next player
-            if new_board.can_play(opposite_player) {
-                turn = opposite_player;
-            } else {
-                if new_board.can_play(turn) {
-                    self.view.skipped(opposite_player)
-                } else {
-                    // The game is over
-                    break;
-                }
+            if board.is_game_end() {
+                break;
             }
+
+            let next_player_type = board.next_player.unwrap();
+            if next_player_type == player_type {
+                self.view.skipped(player_type.opposite());
+            }
+
             board = new_board;
         }
 

@@ -17,7 +17,16 @@ pub const MASK_ALL_SIDES_ZERO: u64      = 0x007e7e7e7e7e7e00;
 /// The first(smallest) bit represents the bottom right square and the last bit represents the top left square.
 pub type Points = u64;
 
-#[inline(always)]
+pub fn to_points(coordinates: &[(u32, u32)]) -> Points {
+    let mut points = 0_u64;
+    for coordinate in coordinates {
+        let x_shift = 7 - (*coordinate).0;
+        let y_shift = 7 - (*coordinate).1;
+        points |= 1_u64 << y_shift * 8 + x_shift
+    }
+    points
+}
+
 pub fn xy_to_point(x: u32, y: u32) -> Points {
     let x_shift = 7 - x;
     let y_shift = 7 - y;

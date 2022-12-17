@@ -7,30 +7,30 @@ pub struct Board {
     pub player1_stones: Points,
     pub player2_stones: Points,
     pub stone_count: u32,
-    pub next_player: PlayerType,
-    // pub placeable_points: Points,
+    pub next_player: Option<PlayerType>,
+    pub placeable_points: Points,
 }
 
 impl Board {
     pub fn new() -> Board {
-        let mut board = Board {
-            player1_stones: 0,
-            player2_stones: 0,
-            stone_count: 4,
-            next_player: PlayerType::First,
-        };
+        let player1_stones = to_points(&[(3, 4), (4, 3)]);
+        let player2_stones = to_points(&[(3, 3), (4, 4)]);
 
-        board.set_stone_xy(PlayerType::First, 3, 4);
-        board.set_stone_xy(PlayerType::First, 4, 3);
-        board.set_stone_xy(PlayerType::Second, 3, 3);
-        board.set_stone_xy(PlayerType::Second, 4, 4);
-        return board;
+        Board {
+            player1_stones,
+            player2_stones,
+            stone_count: 4,
+            next_player: Some(PlayerType::First),
+            placeable_points: Board::placeable_points(player1_stones, player2_stones),
+        }
     }
 
     /*
      * Place a stone and reverse opposite stones.
      */
-    pub fn place_stone(&self, player: PlayerType, point: Points) -> Board {
+    pub fn place_stone(&self, point: Points) -> Board {
+        let player = self.next_player.unwrap();
+
         let mut reversed: u64 = 0;
         let mut player_stones = self.get_stones(player);
         let mut opponent_stones = self.get_stones(player.opposite());
@@ -54,31 +54,34 @@ impl Board {
         opponent_stones ^= reversed;
 
         let stone_count = self.stone_count + 1;
-        let player1_stones = match player {
-            PlayerType::First => player_stones,
-            PlayerType::Second => opponent_stones,
+
+        let (player1_stones, player2_stones) = match player {
+            PlayerType::First => (player_stones, opponent_stones),
+            PlayerType::Second => (opponent_stones, player_stones),
         };
-        let player2_stones = match player {
-            PlayerType::First => opponent_stones,
-            PlayerType::Second => player_stones,
-        };
+
+        let mut next_player = Some(player.opposite());
+        let mut placeable_points = Board::placeable_points(opponent_stones, player_stones);
+
+        if placeable_points == 0 {
+            next_player = Some(player);
+            placeable_points = Board::placeable_points(player_stones, opponent_stones);
+            if placeable_points == 0 {
+                next_player = None;
+            }
+        }
 
         Board {
             player1_stones,
             player2_stones,
             stone_count,
-            next_player
+            next_player,
+            placeable_points,
         }
     }
 
-    #[inline(always)]
-    fn set_stone_xy(&mut self, player: PlayerType, x: u32, y: u32) {
-        self.set_stone(player, xy_to_point(x, y));
-    }
-
-    #[inline(always)]
-    fn set_stone(&mut self, player: PlayerType, point: Points) {
-        *self.get_stones_ref(player) |= point;
+    pub fn is_game_end(&self) -> bool {
+        self.next_player.is_none()
     }
 
     #[inline(always)]
@@ -92,22 +95,15 @@ impl Board {
         self.get_stones(player) & point > 0
     }
 
-    pub fn count_stones(&self, player: PlayerType) -> u32 {
-        self.get_stones(player).count_ones()
+    pub fn count_stones(&self, player: PlayerType) -> i32 {
+        self.get_stones(player).count_ones() as i32
     }
 
-    pub fn can_play(&self, player: PlayerType) -> bool {
-        self.placeable_points(player) != 0
+    pub fn can_place(&self, point: Points) -> bool {
+        self.placeable_points & point != 0
     }
 
-    pub fn can_place(&self, player: PlayerType, point: Points) -> bool {
-        self.placeable_points(player) & point != 0
-    }
-
-    pub fn placeable_points(&self, player: PlayerType) -> Points {
-        let player_stones = self.get_stones(player);
-        let opponent_stones = self.get_stones(player.opposite());
-
+    fn placeable_points(player_stones: Points, opponent_stones: Points) -> Points {
         let horizontal_targets = opponent_stones & MASK_LEFT_RIGHT_ZERO;
         let vertical_targets = opponent_stones & MASK_TOP_BOTTOM_ZERO;
         let diagonal_targets = opponent_stones & MASK_ALL_SIDES_ZERO;
@@ -145,6 +141,7 @@ impl Board {
         }
     }
 
+    #[allow(dead_code)]
     #[inline(always)]
     pub fn get_stones_ref(&mut self, player: PlayerType) -> &mut u64 {
         match player {

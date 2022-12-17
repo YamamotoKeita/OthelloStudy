@@ -55,11 +55,11 @@ impl CuiView {
 }
 
 impl OthelloView for CuiView  {
-    fn wait_next_move(&self, board: &Board, player: PlayerType) {
+    fn wait_next_move(&self, board: &Board) {
         let text = self.to_str(board);
         println!("{}", text);
 
-        let stone = self.get_stone_ref(player);
+        let stone = self.get_stone_ref(board.next_player.unwrap());
         println!("{} Turn", stone);
     }
 

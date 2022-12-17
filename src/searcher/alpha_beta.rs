@@ -1,5 +1,5 @@
 use std::cmp::max;
-use crate::{Board, Points, PlayerType};
+use crate::{Board, Points};
 use crate::evaluator::Evaluator;
 use crate::searcher::Searcher;
 
@@ -8,14 +8,14 @@ struct AlphaBeta<T: Evaluator> {
 }
 
 impl <T: Evaluator> Searcher for AlphaBeta<T> {
-    fn search(&self, board: &Board) -> Points {
+    fn search(&self, _board: &Board) -> Points {
         todo!()
     }
 }
 
 impl <T: Evaluator> AlphaBeta<T> {
 
-    fn nega_alpha(&self, board: Board, player: PlayerType, depth: u32, passed: bool, mut alpha: i32, mut beta: i32) -> i32 {
+    fn nega_alpha(&self, board: Board, depth: u32, passed: bool, mut alpha: i32, mut beta: i32) -> i32 {
         // Evaluates a board on a terminal node
         if depth == 0 {
             return self.evaluator.evaluate(&board);
@@ -26,14 +26,14 @@ impl <T: Evaluator> AlphaBeta<T> {
         let mut score = UNDEFINED;
         let mut max_score = UNDEFINED;
 
-        let placeable_points = board.placeable_points(player);
+        let placeable_points = board.placeable_points;
 
         let mut point: Points = 0;
         loop { // Maybe loop is faster than for.
             if point & placeable_points != 0 {
-                let new_board = board.place_stone(player, point);
+                let new_board = board.place_stone(point);
 
-                score = -self.nega_alpha(new_board, player.opposite(), depth - 1, false, -beta, -alpha);
+                score = -self.nega_alpha(new_board, depth - 1, false, -beta, -alpha);
 
                 // pruning
                 if score >= beta {
@@ -57,7 +57,7 @@ impl <T: Evaluator> AlphaBeta<T> {
             if passed {
                 return self.evaluator.evaluate(&board);
             }
-            return -self.nega_alpha(board, player.opposite(), depth, true, -beta, -alpha);
+            return -self.nega_alpha(board, depth, true, -beta, -alpha);
         }
 
         return max_score;
