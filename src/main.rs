@@ -3,7 +3,7 @@ use crate::model::board::*;
 use crate::model::point::*;
 use crate::cui_view::CuiView;
 use crate::model::direction::Direction;
-use crate::model::stone_color::StoneColor;
+use crate::model::player_type::PlayerType;
 use crate::game_manager::*;
 
 mod model;

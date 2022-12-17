@@ -1,7 +1,7 @@
 use crate::game_manager::OthelloView;
 use crate::model::board::Board;
 use crate::model::point::Points;
-use crate::StoneColor;
+use crate::PlayerType;
 
 pub struct CuiView {
     player1_stone: String,
@@ -29,9 +29,9 @@ impl CuiView {
             for x in 0..=7 {
                 result.push_str("| ");
 
-                let stone = if board.has_stone(StoneColor::First, x, y) {
+                let stone = if board.has_stone(PlayerType::First, x, y) {
                     &self.player1_stone
-                } else if board.has_stone(StoneColor::Second, x, y) {
+                } else if board.has_stone(PlayerType::Second, x, y) {
                     &self.player2_stone
                 } else {
                     " "
@@ -46,35 +46,35 @@ impl CuiView {
         return result;
     }
 
-    pub fn get_stone_ref(&self, color: StoneColor) -> &String {
-        match color {
-            StoneColor::First => &self.player1_stone,
-            StoneColor::Second => &self.player2_stone,
+    pub fn get_stone_ref(&self, player: PlayerType) -> &String {
+        match player {
+            PlayerType::First => &self.player1_stone,
+            PlayerType::Second => &self.player2_stone,
         }
     }
 }
 
 impl OthelloView for CuiView  {
-    fn wait_next_move(&self, board: &Board, color: StoneColor) {
+    fn wait_next_move(&self, board: &Board, player: PlayerType) {
         let text = self.to_str(board);
         println!("{}", text);
 
-        let stone = self.get_stone_ref(color);
+        let stone = self.get_stone_ref(player);
         println!("{} Turn", stone);
     }
 
     fn place_stone(&self, _point: Points, _before: &Board, _after: &Board) {
     }
 
-    fn skipped(&self, color: StoneColor) {
-        let stone = self.get_stone_ref(color);
+    fn skipped(&self, player: PlayerType) {
+        let stone = self.get_stone_ref(player);
         println!("{} turn is skipped.", stone);
     }
 
     fn game_end(&self, board: &Board) {
         println!("Game End");
-        let first_count = board.count_stones(StoneColor::First).to_string();
-        let second_count = board.count_stones(StoneColor::Second).to_string();
+        let first_count = board.count_stones(PlayerType::First).to_string();
+        let second_count = board.count_stones(PlayerType::Second).to_string();
         println!("{}: {}, {}: {}", self.player1_stone, first_count, self.player2_stone, second_count);
     }
 }

@@ -1,15 +1,15 @@
 use crate::model::board::Board;
 use crate::model::point::Points;
-use crate::StoneColor;
+use crate::PlayerType;
 
 pub trait Player {
-    fn play(&self, board: &Board, color: StoneColor) -> Points;
+    fn play(&self, board: &Board, player: PlayerType) -> Points;
 }
 
 pub trait OthelloView {
-    fn wait_next_move(&self, board: &Board, color: StoneColor);
+    fn wait_next_move(&self, board: &Board, player: PlayerType);
     fn place_stone(&self, point: Points, before: &Board, after: &Board);
-    fn skipped(&self, color: StoneColor);
+    fn skipped(&self, player: PlayerType);
     fn game_end(&self, board: &Board);
 }
 
@@ -30,7 +30,7 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
 
     pub fn start_game(&mut self) {
         let mut board = Board::new();
-        let mut turn = StoneColor::First;
+        let mut turn = PlayerType::First;
 
         loop {
             self.view.wait_next_move(&board, turn);
@@ -42,14 +42,14 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
 
             self.view.place_stone(point, &board, &new_board);
 
-            let opposite_color = turn.opposite();
+            let opposite_player = turn.opposite();
 
             // Change to next player
-            if new_board.can_play(opposite_color) {
-                turn = opposite_color;
+            if new_board.can_play(opposite_player) {
+                turn = opposite_player;
             } else {
                 if new_board.can_play(turn) {
-                    self.view.skipped(opposite_color)
+                    self.view.skipped(opposite_player)
                 } else {
                     // The game is over
                     break;
@@ -61,10 +61,10 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
         self.view.game_end(&board);
     }
 
-    fn get_player(&self, color: StoneColor) -> &dyn Player {
-        match color {
-            StoneColor::First => &self.first_player,
-            StoneColor::Second => &self.second_player,
+    fn get_player(&self, player: PlayerType) -> &dyn Player {
+        match player {
+            PlayerType::First => &self.first_player,
+            PlayerType::Second => &self.second_player,
         }
     }
 }
