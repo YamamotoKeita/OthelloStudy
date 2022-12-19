@@ -1,4 +1,5 @@
-use std::ops::Range;
+use once_cell::sync::Lazy;
+
 use crate::Direction;
 
 pub const MASK_BOTTOM_ZERO: u64         = 0xffffffffffffff00;
@@ -13,7 +14,14 @@ pub const MASK_LEFT_RIGHT_ZERO: u64     = 0x7e7e7e7e7e7e7e7e;
 pub const MASK_TOP_BOTTOM_ZERO: u64     = 0x00FFFFFFFFFFFF00;
 pub const MASK_ALL_SIDES_ZERO: u64      = 0x007e7e7e7e7e7e00;
 
-pub const POINT_ITERATOR: Range<u64> = 0..64;
+pub static POINT_ITERATOR: Lazy<[Points; 64]> = Lazy::new(|| point_iterator());
+
+fn point_iterator() -> [Points; 64] {
+    <[Points; 64]>::try_from((0..64)
+        .map(|n| 1 << n )
+        .collect::<Vec<u64>>())
+        .unwrap()
+}
 
 /// Represents specific points on the Othello board as bits in a 64 bit integer.
 /// The 64 bits of integer correspond to the 64 (8 x 8) squares of Othello board.

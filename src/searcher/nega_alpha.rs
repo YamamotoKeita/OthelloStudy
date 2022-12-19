@@ -15,7 +15,7 @@ impl <T: Evaluator> Searcher for NegaAlpha<T> {
         let mut result: Option<Points> = None;
         let mut score: i32;
 
-        for point in POINT_ITERATOR {
+        for point in *POINT_ITERATOR {
             if board.can_place(point) {
                 let new_board = board.place_stone(point);
                 score = -self.nega_alpha(new_board, max_depth, -beta, -alpha);
@@ -51,7 +51,7 @@ impl <T: Evaluator> NegaAlpha<T> {
             return -self.nega_alpha(board, depth, -beta, -alpha);
         }
 
-        for point in POINT_ITERATOR {
+        for point in *POINT_ITERATOR {
             if !board.can_place(point) { continue; }
 
             let new_board = board.place_stone(point);
