@@ -35,7 +35,7 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
             self.view.wait_next_move(&board);
 
             // Place a stone
-            let player_type = board.next_player.unwrap();
+            let player_type = board.player.unwrap();
             let player = self.get_player(player_type);
             let point = player.play(&board);
             let mut new_board = board.place_stone(point);

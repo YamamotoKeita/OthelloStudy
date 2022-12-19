@@ -59,7 +59,7 @@ impl OthelloView for CuiView  {
         let text = self.to_str(board);
         println!("{}", text);
 
-        let stone = self.get_stone_ref(board.next_player.unwrap());
+        let stone = self.get_stone_ref(board.player.unwrap());
         println!("{} Turn", stone);
     }
 

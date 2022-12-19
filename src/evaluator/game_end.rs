@@ -7,7 +7,7 @@ pub struct GameEndEvaluator {}
 impl Evaluator for GameEndEvaluator {
     fn evaluate(&self, board: &Board) -> i32 {
         let count1 = board.count_stones(PlayerType::First);
-        let count2 = board.count_stones(PlayerType::First);
+        let count2 = board.count_stones(PlayerType::Second);
         let mut point = count1 - count2;
         if point > 0 {
             point += 100;

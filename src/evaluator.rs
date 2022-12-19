@@ -2,6 +2,7 @@ use crate::Board;
 
 mod cell_weight;
 mod game_end;
+mod placeable_point;
 
 pub trait Evaluator {
     /*

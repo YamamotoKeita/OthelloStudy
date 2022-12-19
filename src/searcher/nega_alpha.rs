@@ -18,7 +18,7 @@ impl <T: Evaluator> NegaAlpha<T> {
     fn nega_alpha(&self, mut board: Board, depth: u32, mut alpha: i32, beta: i32) -> i32 {
         // Evaluates a board on a terminal node
         if depth == 0 || board.is_game_end() {
-            let sign = if board.next_player.unwrap() == PlayerType::First { 1 } else { -1 };
+            let sign = if board.player.unwrap() == PlayerType::First { 1 } else { -1 };
             return self.evaluator.evaluate(&board) * sign;
         }
 
