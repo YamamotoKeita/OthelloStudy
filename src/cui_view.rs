@@ -11,8 +11,8 @@ pub struct CuiView {
 impl CuiView {
     pub fn new() -> CuiView {
         CuiView {
-            player1_stone: "○".to_string(),
-            player2_stone: "●".to_string(),
+            player1_stone: "●".to_string(),
+            player2_stone: "○".to_string(),
         }
     }
 
