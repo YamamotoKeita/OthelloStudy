@@ -1,4 +1,4 @@
-mod nega_alpha;
+pub mod nega_alpha;
 
 use crate::{Board, Points};
 

@@ -4,6 +4,8 @@ mod cell_weight;
 mod game_end;
 mod placeable_point;
 mod open_count;
+pub mod game_evaluator;
+pub mod simple_prediction;
 
 pub trait Evaluator {
     /*

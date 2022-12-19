@@ -17,3 +17,9 @@ impl Evaluator for GameEndEvaluator {
         point as i32
     }
 }
+
+impl GameEndEvaluator {
+    pub fn new() -> GameEndEvaluator {
+        GameEndEvaluator{}
+    }
+}

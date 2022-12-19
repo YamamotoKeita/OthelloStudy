@@ -3,7 +3,7 @@ use crate::{Board, PlayerType, POINT_ITERATOR, Points};
 use crate::evaluator::Evaluator;
 use crate::searcher::Searcher;
 
-struct NegaAlpha<T: Evaluator> {
+pub struct NegaAlpha<T: Evaluator> {
     evaluator: T,
 }
 
@@ -32,6 +32,11 @@ impl <T: Evaluator> Searcher for NegaAlpha<T> {
 }
 
 impl <T: Evaluator> NegaAlpha<T> {
+    pub fn new(evaluator: T) -> NegaAlpha<T> {
+        NegaAlpha {
+            evaluator
+        }
+    }
 
     fn nega_alpha(&self, mut board: Board, depth: u32, mut alpha: i32, beta: i32) -> i32 {
         // Evaluates a board on a terminal node
@@ -62,4 +67,5 @@ impl <T: Evaluator> NegaAlpha<T> {
 
         return alpha;
     }
+
 }
