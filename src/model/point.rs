@@ -1,3 +1,4 @@
+use std::ops::Range;
 use crate::Direction;
 
 pub const MASK_BOTTOM_ZERO: u64         = 0xffffffffffffff00;
@@ -11,6 +12,8 @@ pub const MASK_RIGHT_BOTTOM_ZERO: u64   = 0xfefefefefefefe00;
 pub const MASK_LEFT_RIGHT_ZERO: u64     = 0x7e7e7e7e7e7e7e7e;
 pub const MASK_TOP_BOTTOM_ZERO: u64     = 0x00FFFFFFFFFFFF00;
 pub const MASK_ALL_SIDES_ZERO: u64      = 0x007e7e7e7e7e7e00;
+
+pub const POINT_ITERATOR: Range<u64> = 0..64;
 
 /// Represents specific points on the Othello board as bits in a 64 bit integer.
 /// The 64 bits of integer correspond to the 64 (8 x 8) squares of Othello board.

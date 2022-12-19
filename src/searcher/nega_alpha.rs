@@ -1,5 +1,5 @@
 use std::cmp::max;
-use crate::{Board, PlayerType, Points};
+use crate::{Board, PlayerType, POINT_ITERATOR, Points};
 use crate::evaluator::Evaluator;
 use crate::searcher::Searcher;
 
@@ -8,8 +8,26 @@ struct NegaAlpha<T: Evaluator> {
 }
 
 impl <T: Evaluator> Searcher for NegaAlpha<T> {
-    fn search(&self, _board: &Board) -> Points {
-        todo!()
+    fn search(&self, board: &Board, max_depth: u32) -> Points {
+
+        let mut alpha = i32::MIN;
+        let beta = i32::MAX;
+        let mut result: Option<Points> = None;
+        let mut score: i32;
+
+        for point in POINT_ITERATOR {
+            if board.can_place(point) {
+                let new_board = board.place_stone(point);
+                score = -self.nega_alpha(new_board, max_depth, -beta, -alpha);
+
+                if alpha < score {
+                    alpha = score;
+                    result = Some(point);
+                }
+            }
+        }
+
+        return result.unwrap();
     }
 }
 
@@ -28,8 +46,8 @@ impl <T: Evaluator> NegaAlpha<T> {
             return -self.nega_alpha(board, depth, -beta, -alpha);
         }
 
-        for point in 0_u64..64 {
-            if (point & board.placeable_points) == 0 { continue; }
+        for point in POINT_ITERATOR {
+            if !board.can_place(point) { continue; }
 
             let new_board = board.place_stone(point);
             let score = -self.nega_alpha(new_board, depth - 1, -beta, -alpha);

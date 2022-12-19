@@ -1,12 +1,17 @@
-use crate::{Board, PlayerType, Points};
+use crate::{Board, PlayerType};
 use crate::evaluator::Evaluator;
 
 pub struct PlaceablePointEvaluator {}
 
 impl Evaluator for PlaceablePointEvaluator {
     fn evaluate(&self, board: &Board) -> i32 {
-        //board.next_player.unwrap()
-        let count1 = board.count_stones(PlayerType::First);
-        let count2 = board.count_stones(PlayerType::Second);
+        let player = board.player.unwrap();
+        let count = board.count_stones(player);
+
+        if player == PlayerType::First {
+            count
+        } else {
+            -count
+        }
     }
 }
