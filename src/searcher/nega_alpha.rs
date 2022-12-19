@@ -10,8 +10,10 @@ pub struct NegaAlpha<T: Evaluator> {
 impl <T: Evaluator> Searcher for NegaAlpha<T> {
     fn search(&self, board: &Board, max_depth: u32) -> Points {
 
-        let mut alpha = i32::MIN;
-        let beta = i32::MAX;
+        // Adds or subtracts 1, because MIN and MAX make overflow when they negate.
+        let mut alpha = i32::MIN + 1;
+        let beta = i32::MAX - 1;
+
         let mut result: Option<Points> = None;
         let mut score: i32;
 
