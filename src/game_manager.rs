@@ -38,16 +38,17 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
             let player_type = board.next_player.unwrap();
             let player = self.get_player(player_type);
             let point = player.play(&board);
-            let new_board = board.place_stone(point);
+            let mut new_board = board.place_stone(point);
             self.view.place_stone(point, &board, &new_board);
 
-            if board.is_game_end() {
-                break;
-            }
+            if new_board.placeable_points == 0 {
+                new_board.skip_turn();
 
-            let next_player_type = board.next_player.unwrap();
-            if next_player_type == player_type {
-                self.view.skipped(player_type.opposite());
+                if new_board.is_game_end() {
+                    break;
+                } else {
+                    self.view.skipped(player_type.opposite());
+                }
             }
 
             board = new_board;

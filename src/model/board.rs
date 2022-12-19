@@ -60,16 +60,8 @@ impl Board {
             PlayerType::Second => (opponent_stones, player_stones),
         };
 
-        let mut next_player = Some(player.opposite());
-        let mut placeable_points = Board::placeable_points(opponent_stones, player_stones);
-
-        if placeable_points == 0 {
-            next_player = Some(player);
-            placeable_points = Board::placeable_points(player_stones, opponent_stones);
-            if placeable_points == 0 {
-                next_player = None;
-            }
-        }
+        let next_player = Some(player.opposite());
+        let placeable_points = Board::placeable_points(opponent_stones, player_stones);
 
         Board {
             player1_stones,
@@ -77,6 +69,23 @@ impl Board {
             stone_count,
             next_player,
             placeable_points,
+        }
+    }
+
+    /*
+     * Skips the turn of self.next_player, then if there are no placeable points, set next_player None.
+     */
+    pub fn skip_turn(&mut self) {
+        let player = self.next_player.unwrap();
+        let next_player = player.opposite();
+        self.next_player = Some(next_player);
+
+        let player_stones = self.get_stones(next_player);
+        let opponent_stones = self.get_stones(player);
+        self.placeable_points = Board::placeable_points(player_stones, opponent_stones);
+
+        if self.placeable_points == 0 {
+            self.next_player = None;
         }
     }
 

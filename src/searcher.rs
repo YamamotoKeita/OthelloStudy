@@ -1,4 +1,4 @@
-mod alpha_beta;
+mod nega_alpha;
 
 use crate::{Board, Points};
 
