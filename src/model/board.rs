@@ -129,7 +129,7 @@ impl Board {
             };
 
             // Shift the player stones 6 squares and mark where the opponent stones are in the direction of movement.
-            let mut tmp= targets & shift_points_without_guard(player_stones, *direction);
+            let mut tmp = targets & shift_points_without_guard(player_stones, *direction);
             for _ in 0..5 {
                 tmp |= targets & shift_points_without_guard(tmp, *direction);
             }
