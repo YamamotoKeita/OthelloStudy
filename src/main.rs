@@ -21,6 +21,7 @@ mod ai_player;
 
 fn main() {
     let player1 = CuiPlayer::new();
+    // let player2 = CuiPlayer::new();
 
     let game_evaluator = GameEvaluator::new(SimplePrediction::new());
     let nega_alpha = NegaAlpha::new(game_evaluator);

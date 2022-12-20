@@ -1,10 +1,10 @@
 use crate::{Board};
 use crate::evaluator::Evaluator;
-use crate::evaluator::game_end::GameEndEvaluator;
+use crate::evaluator::stone_count::StoneCountEvaluator;
 
 
 pub struct GameEvaluator<T: Evaluator> {
-    end_evaluator: GameEndEvaluator,
+    end_evaluator: StoneCountEvaluator,
     evaluator: T,
 }
 
@@ -21,7 +21,7 @@ impl <T: Evaluator> Evaluator for GameEvaluator<T> {
 impl <T: Evaluator> GameEvaluator<T> {
     pub fn new(evaluator: T) -> GameEvaluator<T> {
         GameEvaluator {
-            end_evaluator: GameEndEvaluator::new(),
+            end_evaluator: StoneCountEvaluator::new(),
             evaluator,
         }
     }

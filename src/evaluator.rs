@@ -1,7 +1,7 @@
 use crate::Board;
 
 mod cell_weight;
-mod game_end;
+mod stone_count;
 mod placeable_point;
 mod open_count;
 pub mod game_evaluator;

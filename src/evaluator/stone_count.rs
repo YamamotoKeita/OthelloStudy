@@ -2,9 +2,9 @@ use crate::{Board, PlayerType};
 use crate::evaluator::Evaluator;
 
 
-pub struct GameEndEvaluator {}
+pub struct StoneCountEvaluator {}
 
-impl Evaluator for GameEndEvaluator {
+impl Evaluator for StoneCountEvaluator {
     fn evaluate(&self, board: &Board) -> i32 {
         let count1 = board.count_stones(PlayerType::First);
         let count2 = board.count_stones(PlayerType::Second);
@@ -18,8 +18,8 @@ impl Evaluator for GameEndEvaluator {
     }
 }
 
-impl GameEndEvaluator {
-    pub fn new() -> GameEndEvaluator {
-        GameEndEvaluator{}
+impl StoneCountEvaluator {
+    pub fn new() -> StoneCountEvaluator {
+        StoneCountEvaluator {}
     }
 }

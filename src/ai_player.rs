@@ -15,6 +15,6 @@ impl <T: Searcher> AiPlayer<T> {
 
 impl <T: Searcher> Player for AiPlayer<T> {
     fn play(&self, board: &Board) -> Points {
-        self.searcher.search(board, 4)
+        self.searcher.search(board, 8)
     }
 }
