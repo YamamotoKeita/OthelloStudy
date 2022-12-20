@@ -1,9 +1,9 @@
 use crate::Board;
 
-mod cell_weight;
-mod stone_count;
-mod placeable_point;
-mod open_count;
+pub mod cell_weight;
+pub mod stone_count;
+pub mod placeable_point;
+pub mod open_count;
 pub mod game_evaluator;
 pub mod simple_prediction;
 

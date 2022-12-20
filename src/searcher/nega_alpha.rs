@@ -69,5 +69,4 @@ impl <T: Evaluator> NegaAlpha<T> {
 
         return alpha;
     }
-
 }

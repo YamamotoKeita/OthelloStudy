@@ -1,4 +1,5 @@
 pub mod nega_alpha;
+pub mod searcher_tests;
 
 use crate::{Board, Points};
 
