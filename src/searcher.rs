@@ -1,3 +1,4 @@
+pub mod alpha_beta;
 pub mod nega_alpha;
 pub mod searcher_tests;
 

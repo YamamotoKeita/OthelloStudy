@@ -1,13 +1,14 @@
-use std::cmp::max;
+use std::cmp::{max, min};
 use crate::{Board, PlayerType, POINT_ITERATOR, Points};
 use crate::evaluator::Evaluator;
 use crate::searcher::Searcher;
 
-pub struct NegaAlpha<T: Evaluator> {
+pub struct AlphaBeta<T: Evaluator> {
     evaluator: T,
 }
 
-impl <T: Evaluator> Searcher for NegaAlpha<T> {
+impl <T: Evaluator> Searcher for AlphaBeta<T> {
+
     fn search(&self, board: &Board, max_depth: u32) -> Points {
         let mut result: Option<Points> = None;
         let mut max_score = i32::MIN;
@@ -24,41 +25,51 @@ impl <T: Evaluator> Searcher for NegaAlpha<T> {
     }
 }
 
-impl <T: Evaluator> NegaAlpha<T> {
-    pub fn new(evaluator: T) -> NegaAlpha<T> {
-        NegaAlpha {
+impl <T: Evaluator> AlphaBeta<T> {
+    pub fn new(evaluator: T) -> AlphaBeta<T> {
+        AlphaBeta {
             evaluator
         }
     }
 
-    fn nega_alpha(&self, mut board: Board, depth: u32, mut alpha: i32, beta: i32) -> i32 {
+    fn alpha_beta(&self, mut board: Board, depth: u32, mut alpha: i32, mut beta: i32) -> i32 {
+
         // Evaluates a board on a terminal node
         if depth == 0 || board.is_game_end() {
-            let sign = if board.player.unwrap() == PlayerType::First { 1 } else { -1 };
-            return self.evaluator.evaluate(&board) * sign;
+            return self.evaluator.evaluate(&board);
         }
 
         // Skip and turn change
         if board.placeable_points == 0 {
             board.skip_turn();
-            return -self.nega_alpha(board, depth, -beta, -alpha);
+            return self.alpha_beta(board, depth, alpha, beta);
         }
 
-        for point in *POINT_ITERATOR {
-            if !board.can_place(point) { continue; }
+        return if board.player.unwrap() == PlayerType::First {
+            for point in *POINT_ITERATOR {
+                if !board.can_place(point) { continue; }
 
-            let new_board = board.place_stone(point);
-            let score = -self.nega_alpha(new_board, depth - 1, -beta, -alpha);
-
-            // pruning
-            if score >= beta {
-                return score;
+                let new_board = board.place_stone(point);
+                let score = self.alpha_beta(new_board, depth - 1, alpha, beta);
+                alpha = max(alpha, score);
+                if alpha >= beta {
+                    break;
+                }
             }
+            alpha
+        } else {
+            for point in *POINT_ITERATOR {
+                if !board.can_place(point) { continue; }
 
-            alpha = max(alpha, score);
+                let new_board = board.place_stone(point);
+                let score = self.alpha_beta(new_board, depth - 1, alpha, beta);
+                beta = min(beta, score);
+                if alpha >= beta {
+                    break;
+                }
+            }
+            beta
         }
-
-        return alpha;
     }
 
     pub fn evaluate_children(&self, board: &Board, max_depth: u32) -> Vec<(Points, i32)> {
@@ -71,7 +82,7 @@ impl <T: Evaluator> NegaAlpha<T> {
         for point in *POINT_ITERATOR {
             if board.can_place(point) {
                 let new_board = board.place_stone(point);
-                let score = -self.nega_alpha(new_board, max_depth, -beta, -alpha);
+                let score = self.alpha_beta(new_board, max_depth, alpha, beta);
                 result.push((point, score));
             }
         }

@@ -1,6 +1,7 @@
 use crate::{Board, PlayerType};
 use crate::evaluator::Evaluator;
 
+const MAGNITUDE: i32 = 100;
 
 pub struct StoneCountEvaluator {}
 
@@ -8,13 +9,7 @@ impl Evaluator for StoneCountEvaluator {
     fn evaluate(&self, board: &Board) -> i32 {
         let count1 = board.count_stones(PlayerType::First);
         let count2 = board.count_stones(PlayerType::Second);
-        let mut point = count1 - count2;
-        if point > 0 {
-            point += 100;
-        } else if point < 0 {
-            point -= 100;
-        }
-        point as i32
+        (count1 as i32 - count2 as i32) * MAGNITUDE
     }
 }
 
