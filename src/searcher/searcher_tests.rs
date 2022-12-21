@@ -8,30 +8,22 @@ mod searcher_tests {
     use crate::searcher::game_tree_searcher::GameTreeSearcher;
     use crate::searcher::mini_max::MiniMax;
 
-    #[test]
-    fn first_move() {
-        test_first_move(&mini_max());
-        test_first_move(&alpha_beta());
-        test_first_move(&nega_alpha());
+    fn searchers() -> Vec<Box<dyn GameTreeSearcher>> {
+        vec![
+            Box::new(MiniMax::new(StoneCountEvaluator::new())),
+            Box::new(AlphaBeta::new(StoneCountEvaluator::new())),
+            Box::new(NegaAlpha::new(StoneCountEvaluator::new())),
+        ]
     }
 
-    fn test_first_move(searcher: &dyn GameTreeSearcher) {
-        let board = Board::new();
-        let result = searcher.evaluate_next_moves(&board, 1);
-        assert_eq!(result.len(), 4);
-        for (_, value) in result {
-            assert_eq!(value, 3);
+    #[test]
+    fn d1_black_move() {
+        for searcher in searchers() {
+            test_d1_black_move(&*searcher);
         }
     }
 
-    #[test]
-    fn black_move() {
-        test_black_move(&mini_max());
-        test_black_move(&alpha_beta());
-        test_black_move(&nega_alpha());
-    }
-
-    fn test_black_move(searcher: &dyn GameTreeSearcher) {
+    fn test_d1_black_move(searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_moves("F5F4");
         let result = searcher.evaluate_next_moves(&board, 1);
         assert_eq!(result.len(), 5);
@@ -43,13 +35,13 @@ mod searcher_tests {
     }
 
     #[test]
-    fn white_move() {
-        test_white_move(&mini_max());
-        test_white_move(&alpha_beta());
-        test_white_move(&nega_alpha());
+    fn d1_white_move() {
+        for searcher in searchers() {
+            test_d1_white_move(&*searcher);
+        }
     }
 
-    fn test_white_move(searcher: &dyn GameTreeSearcher) {
+    fn test_d1_white_move(searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_moves("F5F4F3");
         let result = searcher.evaluate_next_moves(&board, 1);
         assert_eq!(result.len(), 3);
@@ -59,11 +51,13 @@ mod searcher_tests {
     }
 
     #[test]
-    fn game_end() {
-        test_game_end(&mini_max());
+    fn d1_game_end_from_white() {
+        for searcher in searchers() {
+            test_d1_game_end_from_white(&*searcher);
+        }
     }
 
-    fn test_game_end(_searcher: &dyn GameTreeSearcher) {
+    fn test_d1_game_end_from_white(searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_text("
 ○ ○ ○ ○ ○ ○ ○ ○
 ○ ○ ○ ○ ○ ○ ○ ○
@@ -75,9 +69,22 @@ mod searcher_tests {
 ○ ○ ○ ○ ○ ○ ● □
 ", PlayerType::Second);
 
-        println!("{}", CuiView::new().to_str(&board))
-
+        let result = searcher.evaluate_next_moves(&board, 1);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].1, 64);
     }
+
+    #[test]
+    fn depth2_from_black() {}
+
+    #[test]
+    fn depth3_from_black() {}
+
+    #[test]
+    fn depth2_from_white() {}
+
+    #[test]
+    fn depth3_from_white() {}
 
     #[test]
     fn includes_skipping_turn() {
@@ -89,13 +96,4 @@ mod searcher_tests {
 
     }
 
-    fn mini_max() -> MiniMax<StoneCountEvaluator> {
-        MiniMax::new(StoneCountEvaluator::new())
-    }
-    fn alpha_beta() -> AlphaBeta<StoneCountEvaluator> {
-        AlphaBeta::new(StoneCountEvaluator::new())
-    }
-    fn nega_alpha() -> NegaAlpha<StoneCountEvaluator> {
-        NegaAlpha::new(StoneCountEvaluator::new())
-    }
 }

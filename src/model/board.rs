@@ -25,6 +25,7 @@ impl Board {
         }
     }
 
+    #[allow(dead_code)]
     pub fn new_by_moves(text: &str) -> Board {
         let mut board = Board::new();
 
@@ -41,6 +42,7 @@ impl Board {
         board
     }
 
+    #[allow(dead_code)]
     pub fn new_by_text(text: &str, player: PlayerType) -> Board {
         let mut player1_stones: Points = 0;
         let mut player2_stones: Points = 0;
@@ -56,12 +58,18 @@ impl Board {
             }
         }
 
+        let (player_stones, opponent_stones) = match player {
+            PlayerType::First => (player1_stones, player2_stones),
+            PlayerType::Second => (player2_stones, player1_stones),
+            PlayerType::None => panic!("Use a player when there is no player."),
+        };
+
         Board {
             player1_stones,
             player2_stones,
             stone_count: player1_stones.count_ones() + player2_stones.count_ones(),
             player,
-            placeable_points: Board::placeable_points(player1_stones, player2_stones),
+            placeable_points: Board::placeable_points(player_stones, opponent_stones),
         }
     }
 
@@ -204,5 +212,32 @@ impl Board {
             PlayerType::Second => &mut self.player2_stones,
             PlayerType::None => panic!("Use a player when there is no player."),
         }
+    }
+
+    #[allow(dead_code)]
+    pub fn to_string(&self) -> String {
+        let mut result = "".to_string();
+
+        result.push_str("  A B C D E F G H\n");
+
+        for y in 0..=7 {
+            result.push_str(&((y + 1).to_string() + " "));
+
+            for x in 0..=7 {
+                let stone = if self.has_stone(PlayerType::First, x, y) {
+                    "●"
+                } else if self.has_stone(PlayerType::Second, x, y) {
+                    "○"
+                } else {
+                    "□"
+                };
+                result.push_str(stone);
+                result.push_str(" ");
+            }
+            result.push_str("\n");
+        }
+
+
+        return result;
     }
 }
