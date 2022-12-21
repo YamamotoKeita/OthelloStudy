@@ -12,6 +12,13 @@ impl PlayerType {
             PlayerType::Second => PlayerType::First,
         }
     }
+
+    pub fn sign(&self) -> i32 {
+        match self {
+            PlayerType::First => 1,
+            PlayerType::Second => -1,
+        }
+    }
 }
 
 impl fmt::Display for PlayerType {

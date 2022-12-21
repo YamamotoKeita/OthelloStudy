@@ -15,7 +15,7 @@ mod searcher_tests {
 
     fn test_first_move(searcher: &dyn GameTreeSearcher) {
         let board = Board::new();
-        let result = searcher.evaluate_children(&board, 1);
+        let result = searcher.evaluate_next_moves(&board, 1);
         assert_eq!(result.len(), 4);
         for (_, value) in result {
             assert_eq!(value, 3);
@@ -30,7 +30,7 @@ mod searcher_tests {
 
     fn test_black_move(searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_moves("F5F4");
-        let result = searcher.evaluate_children(&board, 1);
+        let result = searcher.evaluate_next_moves(&board, 1);
         assert_eq!(result.len(), 5);
         assert_eq!(result[0].1, 3);
         assert_eq!(result[1].1, 5);
@@ -47,7 +47,7 @@ mod searcher_tests {
 
     fn test_white_move(searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_moves("F5F4F3");
-        let result = searcher.evaluate_children(&board, 1);
+        let result = searcher.evaluate_next_moves(&board, 1);
         assert_eq!(result.len(), 3);
         assert_eq!(result[0].1, -2);
         assert_eq!(result[1].1, -2);

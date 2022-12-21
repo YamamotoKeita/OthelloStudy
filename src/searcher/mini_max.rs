@@ -1,28 +1,27 @@
-use std::cmp::{max, min};
 use crate::{Board, PlayerType, POINT_ITERATOR, Points};
 use crate::evaluator::Evaluator;
 use crate::searcher::game_tree_searcher::GameTreeSearcher;
 use crate::searcher::Searcher;
 
-pub struct AlphaBeta<T: Evaluator> {
+pub struct MiniMax<T: Evaluator> {
     evaluator: T,
 }
 
-impl <T: Evaluator> Searcher for AlphaBeta<T> {
+impl <T: Evaluator> Searcher for MiniMax<T> {
     fn search(&self, board: &Board, max_depth: u32) -> Points {
         return self.search_best_move(board, max_depth);
     }
 }
 
 #[allow(dead_code)]
-impl <T: Evaluator> AlphaBeta<T> {
-    pub fn new(evaluator: T) -> AlphaBeta<T> {
-        AlphaBeta {
+impl <T: Evaluator> MiniMax<T> {
+    pub fn new(evaluator: T) -> MiniMax<T> {
+        MiniMax {
             evaluator
         }
     }
 
-    fn alpha_beta(&self, mut board: Board, depth: u32, mut alpha: i32, mut beta: i32, player: PlayerType) -> i32 {
+    fn mini_max(&self, mut board: Board, depth: u32, player: PlayerType) -> i32 {
 
         // Evaluates a board on a terminal node
         if depth == 0 || board.is_game_end() {
@@ -32,49 +31,45 @@ impl <T: Evaluator> AlphaBeta<T> {
         // Skip and turn change
         if board.placeable_points == 0 {
             board.skip_turn();
-            return self.alpha_beta(board, depth, alpha, beta, player);
+            return self.mini_max(board, depth, player);
         }
 
-        return if board.player.unwrap() == PlayerType::First {
+        return if board.player.unwrap() == player {
+            let mut max = i32::MIN;
             for point in *POINT_ITERATOR {
                 if !board.can_place(point) { continue; }
 
                 let new_board = board.place_stone(point);
-                let score = self.alpha_beta(new_board, depth - 1, alpha, beta, player);
-                alpha = max(alpha, score);
-                if alpha >= beta {
-                    break;
+                let score = self.mini_max(new_board, depth - 1, player);
+                if score > max {
+                    max = score;
                 }
             }
-            alpha
+            max
         } else {
+            let mut min = i32::MAX;
             for point in *POINT_ITERATOR {
                 if !board.can_place(point) { continue; }
 
                 let new_board = board.place_stone(point);
-                let score = self.alpha_beta(new_board, depth - 1, alpha, beta, player);
-                beta = min(beta, score);
-                if alpha >= beta {
-                    break;
+                let score = self.mini_max(new_board, depth - 1, player);
+                if score < min {
+                    min = score;
                 }
             }
-            beta
+            min
         }
     }
 }
 
-impl <T: Evaluator> GameTreeSearcher for AlphaBeta<T> {
+impl <T: Evaluator> GameTreeSearcher for MiniMax<T> {
     fn evaluate_next_moves(&self, board: &Board, max_depth: u32) -> Vec<(Points, i32)> {
-        // Adds or subtracts 1, because MIN and MAX make overflow when they negate.
-        let alpha = i32::MIN + 1;
-        let beta = i32::MAX - 1;
-
         let mut result: Vec<(Points, i32)> = vec![];
 
         for point in *POINT_ITERATOR {
             if board.can_place(point) {
                 let new_board = board.place_stone(point);
-                let score = self.alpha_beta(new_board, max_depth - 1, alpha, beta, board.player.unwrap());
+                let score = self.mini_max(new_board, max_depth - 1, board.player.unwrap());
                 result.push((point, score));
             }
         }

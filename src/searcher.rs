@@ -1,7 +1,8 @@
 pub mod alpha_beta;
 pub mod nega_alpha;
 pub mod searcher_tests;
-mod game_tree_searcher;
+pub mod game_tree_searcher;
+pub mod mini_max;
 
 use crate::{Board, Points};
 
