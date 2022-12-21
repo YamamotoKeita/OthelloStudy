@@ -71,7 +71,7 @@ impl <T: Evaluator> NegaAlpha<T> {
         for point in *POINT_ITERATOR {
             if board.can_place(point) {
                 let new_board = board.place_stone(point);
-                let score = -self.nega_alpha(new_board, max_depth, -beta, -alpha);
+                let score = -self.nega_alpha(new_board, max_depth - 1, -beta, -alpha);
                 result.push((point, score));
             }
         }

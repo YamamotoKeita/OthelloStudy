@@ -25,6 +25,7 @@ impl <T: Evaluator> Searcher for AlphaBeta<T> {
     }
 }
 
+#[allow(dead_code)]
 impl <T: Evaluator> AlphaBeta<T> {
     pub fn new(evaluator: T) -> AlphaBeta<T> {
         AlphaBeta {
@@ -82,7 +83,7 @@ impl <T: Evaluator> AlphaBeta<T> {
         for point in *POINT_ITERATOR {
             if board.can_place(point) {
                 let new_board = board.place_stone(point);
-                let score = self.alpha_beta(new_board, max_depth, alpha, beta);
+                let score = self.alpha_beta(new_board, max_depth - 1, alpha, beta);
                 result.push((point, score));
             }
         }
