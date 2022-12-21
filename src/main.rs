@@ -1,7 +1,7 @@
 use crate::ai_player::AiPlayer;
 use crate::cui_player::CuiPlayer;
 use crate::model::board::*;
-use crate::model::point::*;
+use crate::model::points::*;
 use crate::cui_view::CuiView;
 use crate::evaluator::game_evaluator::GameEvaluator;
 use crate::model::direction::Direction;

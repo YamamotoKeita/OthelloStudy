@@ -1,6 +1,6 @@
 use crate::game_manager::OthelloView;
 use crate::model::board::Board;
-use crate::model::point::Points;
+use crate::model::points::Points;
 use crate::PlayerType;
 
 pub struct CuiView {

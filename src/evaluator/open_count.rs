@@ -1,11 +1,12 @@
-use crate::model::point::*;
+use crate::model::points::*;
 use crate::{Board, Direction};
 use crate::evaluator::Evaluator;
+use crate::model::evaluation::Evaluation;
 
 pub struct OpenCountEvaluator {}
 
 impl Evaluator for OpenCountEvaluator {
-    fn evaluate(&self, board: &Board) -> i32 {
+    fn evaluate(&self, board: &Board) -> Evaluation {
         let open_points1 = self.open_points(board.player1_stones, board.player2_stones);
         let open_points2 = self.open_points(board.player2_stones, board.player1_stones);
         open_points2.count_ones() as i32 - open_points1.count_ones() as i32

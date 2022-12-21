@@ -1,4 +1,4 @@
-use crate::model::point::*;
+use crate::model::points::*;
 use crate::{Direction, shift_points, PlayerType};
 
 /// Representation of Othello board.
@@ -39,6 +39,30 @@ impl Board {
         }
 
         board
+    }
+
+    pub fn new_by_text(text: &str, player: PlayerType) -> Board {
+        let mut player1_stones: Points = 0;
+        let mut player2_stones: Points = 0;
+
+        for (y, line) in text.trim().split("\n").enumerate() {
+            for (x, c) in line.split(" ").enumerate() {
+                let point = xy_to_point(x as u32, y as u32);
+                if c == "●" {
+                    player1_stones |= point;
+                } else if c == "○" {
+                    player2_stones |= point;
+                }
+            }
+        }
+
+        Board {
+            player1_stones,
+            player2_stones,
+            stone_count: player1_stones.count_ones() + player2_stones.count_ones(),
+            player,
+            placeable_points: Board::placeable_points(player1_stones, player2_stones),
+        }
     }
 
     /*

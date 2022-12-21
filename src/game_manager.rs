@@ -1,5 +1,5 @@
 use crate::model::board::Board;
-use crate::model::point::Points;
+use crate::model::points::Points;
 use crate::PlayerType;
 
 pub trait Player {

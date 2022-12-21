@@ -1,4 +1,5 @@
 pub mod board;
-pub mod point;
+pub mod points;
 pub mod player_type;
 pub mod direction;
+pub mod evaluation;

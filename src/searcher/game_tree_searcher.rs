@@ -1,12 +1,13 @@
 use crate::{Board, Points};
+use crate::model::evaluation::{Evaluation, EVALUATION_MIN};
 use crate::searcher::Searcher;
 
 pub trait GameTreeSearcher {
-    fn evaluate_next_moves(&self, board: &Board, max_depth: u32) -> Vec<(Points, i32)>;
+    fn evaluate_next_moves(&self, board: &Board, max_depth: u32) -> Vec<(Points, Evaluation)>;
 
     fn search_best_move(&self, board: &Board, max_depth: u32) -> Points {
         let mut result: Option<Points> = None;
-        let mut max_score = i32::MIN;
+        let mut max_score = EVALUATION_MIN;
 
         let children = self.evaluate_next_moves(board, max_depth);
 

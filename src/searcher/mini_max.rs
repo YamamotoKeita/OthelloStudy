@@ -1,5 +1,6 @@
 use crate::{Board, PlayerType, POINT_ITERATOR, Points};
 use crate::evaluator::Evaluator;
+use crate::model::evaluation::Evaluation;
 use crate::searcher::game_tree_searcher::GameTreeSearcher;
 use crate::searcher::Searcher;
 
@@ -63,7 +64,7 @@ impl <T: Evaluator> MiniMax<T> {
 }
 
 impl <T: Evaluator> GameTreeSearcher for MiniMax<T> {
-    fn evaluate_next_moves(&self, board: &Board, max_depth: u32) -> Vec<(Points, i32)> {
+    fn evaluate_next_moves(&self, board: &Board, max_depth: u32) -> Vec<(Points, Evaluation)> {
         let mut result: Vec<(Points, i32)> = vec![];
 
         for point in *POINT_ITERATOR {

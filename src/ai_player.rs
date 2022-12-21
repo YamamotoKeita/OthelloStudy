@@ -1,6 +1,6 @@
 use crate::{Board};
 use crate::game_manager::Player;
-use crate::model::point::Points;
+use crate::model::points::Points;
 use crate::searcher::Searcher;
 
 pub struct AiPlayer<T: Searcher> {

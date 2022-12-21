@@ -1,5 +1,6 @@
 use crate::{Board, Points};
 use crate::evaluator::Evaluator;
+use crate::model::evaluation::Evaluation;
 
 const CELL_WEIGHT: [i32; 64] = [
     30, -12,   0, -1, -1,  0, -12,  30,
@@ -15,7 +16,7 @@ const CELL_WEIGHT: [i32; 64] = [
 pub struct CellWeightEvaluator {}
 
 impl Evaluator for CellWeightEvaluator {
-    fn evaluate(&self, board: &Board) -> i32 {
+    fn evaluate(&self, board: &Board) -> Evaluation {
         let mut first = 0_i32;
         let mut second = 0_i32;
 

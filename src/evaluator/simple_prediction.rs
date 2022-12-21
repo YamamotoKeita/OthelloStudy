@@ -3,6 +3,7 @@ use crate::evaluator::cell_weight::CellWeightEvaluator;
 use crate::evaluator::Evaluator;
 use crate::evaluator::open_count::OpenCountEvaluator;
 use crate::evaluator::placeable_point::PlaceablePointEvaluator;
+use crate::model::evaluation::Evaluation;
 
 
 pub struct SimplePrediction {
@@ -12,7 +13,7 @@ pub struct SimplePrediction {
 }
 
 impl Evaluator for SimplePrediction {
-    fn evaluate(&self, board: &Board) -> i32 {
+    fn evaluate(&self, board: &Board) -> Evaluation {
         let cell_weight = self.cell_weight.evaluate(board);
         let placeable_point = self.placeable_point.evaluate(board);
         let open_count = self.open_count.evaluate(board);

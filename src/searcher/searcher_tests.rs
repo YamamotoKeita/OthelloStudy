@@ -3,12 +3,14 @@
 #[allow(unused_imports)]
 mod searcher_tests {
     use crate::evaluator::stone_count::StoneCountEvaluator;
-    use crate::{Board, NegaAlpha, points_to_str};
+    use crate::{Board, CuiView, NegaAlpha, PlayerType, points_to_str};
     use crate::searcher::alpha_beta::AlphaBeta;
     use crate::searcher::game_tree_searcher::GameTreeSearcher;
+    use crate::searcher::mini_max::MiniMax;
 
     #[test]
     fn first_move() {
+        test_first_move(&mini_max());
         test_first_move(&alpha_beta());
         test_first_move(&nega_alpha());
     }
@@ -24,6 +26,7 @@ mod searcher_tests {
 
     #[test]
     fn black_move() {
+        test_black_move(&mini_max());
         test_black_move(&alpha_beta());
         test_black_move(&nega_alpha());
     }
@@ -41,6 +44,7 @@ mod searcher_tests {
 
     #[test]
     fn white_move() {
+        test_white_move(&mini_max());
         test_white_move(&alpha_beta());
         test_white_move(&nega_alpha());
     }
@@ -55,7 +59,23 @@ mod searcher_tests {
     }
 
     #[test]
-    fn end_of_game() {
+    fn game_end() {
+        test_game_end(&mini_max());
+    }
+
+    fn test_game_end(searcher: &dyn GameTreeSearcher) {
+        let board = Board::new_by_text("
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ● □
+", PlayerType::Second);
+
+        println!("{}", CuiView::new().to_str(&board))
 
     }
 
@@ -69,11 +89,12 @@ mod searcher_tests {
 
     }
 
-
+    fn mini_max() -> MiniMax<StoneCountEvaluator> {
+        MiniMax::new(StoneCountEvaluator::new())
+    }
     fn alpha_beta() -> AlphaBeta<StoneCountEvaluator> {
         AlphaBeta::new(StoneCountEvaluator::new())
     }
-
     fn nega_alpha() -> NegaAlpha<StoneCountEvaluator> {
         NegaAlpha::new(StoneCountEvaluator::new())
     }

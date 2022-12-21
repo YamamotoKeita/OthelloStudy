@@ -1,4 +1,5 @@
 use crate::Board;
+use crate::model::evaluation::Evaluation;
 
 pub mod cell_weight;
 pub mod stone_count;
@@ -16,5 +17,5 @@ pub trait Evaluator {
      * If the first(black) player has the advantage, the evaluation is a positive number.
      * If the second(white) player has the advantage, the evaluation is a negative number.
      */
-    fn evaluate(&self, board: &Board) -> i32;
+    fn evaluate(&self, board: &Board) -> Evaluation;
 }

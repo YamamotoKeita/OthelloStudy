@@ -2,7 +2,7 @@ use std::io;
 
 use crate::{Board, to_point_safely};
 use crate::game_manager::Player;
-use crate::model::point::Points;
+use crate::model::points::Points;
 
 pub struct CuiPlayer {
 }
