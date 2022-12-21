@@ -1,6 +1,7 @@
 use std::cmp::max;
 use crate::{Board, PlayerType, POINT_ITERATOR, Points};
 use crate::evaluator::Evaluator;
+use crate::searcher::game_tree_searcher::GameTreeSearcher;
 use crate::searcher::Searcher;
 
 pub struct NegaAlpha<T: Evaluator> {
@@ -9,18 +10,7 @@ pub struct NegaAlpha<T: Evaluator> {
 
 impl <T: Evaluator> Searcher for NegaAlpha<T> {
     fn search(&self, board: &Board, max_depth: u32) -> Points {
-        let mut result: Option<Points> = None;
-        let mut max_score = i32::MIN;
-
-        let children = self.evaluate_children(board, max_depth);
-
-        for (points, value) in children {
-            if value > max_score {
-                result = Some(points);
-                max_score = value;
-            }
-        }
-        return result.unwrap();
+        return self.search_best_move(board, max_depth);
     }
 }
 
@@ -60,8 +50,10 @@ impl <T: Evaluator> NegaAlpha<T> {
 
         return alpha;
     }
+}
 
-    pub fn evaluate_children(&self, board: &Board, max_depth: u32) -> Vec<(Points, i32)> {
+impl <T: Evaluator> GameTreeSearcher for NegaAlpha<T> {
+    fn evaluate_children(&self, board: &Board, max_depth: u32) -> Vec<(Points, i32)> {
         // Adds or subtracts 1, because MIN and MAX make overflow when they negate.
         let alpha = i32::MIN + 1;
         let beta = i32::MAX - 1;
