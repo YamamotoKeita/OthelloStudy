@@ -1,6 +1,6 @@
 use std::io;
 
-use crate::{Board, to_point_safely};
+use crate::{Board, text_to_point_safely};
 use crate::game_manager::Player;
 use crate::model::points::Points;
 
@@ -21,7 +21,7 @@ impl Player for CuiPlayer {
             let mut input = String::new();
             io::stdin().read_line(&mut input).expect("Failed to read line.");
 
-            if let Some(point) = to_point_safely(&input.trim()) {
+            if let Some(point) = text_to_point_safely(&input.trim()) {
                 if board.can_place(point) {
                     return point;
                 } else {

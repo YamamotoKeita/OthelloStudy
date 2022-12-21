@@ -28,7 +28,7 @@ fn point_iterator() -> [Points; 64] {
 /// The first(smallest) bit represents the bottom right square and the last bit represents the top left square.
 pub type Points = u64;
 
-pub fn to_points(coordinates: &[(u32, u32)]) -> Points {
+pub fn coordinates_to_points(coordinates: &[(u32, u32)]) -> Points {
     let mut points = 0_u64;
     for coordinate in coordinates {
         let x_shift = 7 - (*coordinate).0;
@@ -44,14 +44,14 @@ pub fn xy_to_point(x: u32, y: u32) -> Points {
     1_u64 << y_shift * 8 + x_shift
 }
 
-pub fn to_point(text: &str) -> Points {
-    to_point_safely(text).unwrap()
+pub fn text_to_point(text: &str) -> Points {
+    text_to_point_safely(text).unwrap()
 }
 
 /*
  * Convert a location text (such as "1A", "3C") to a point.
  */
-pub fn to_point_safely(text: &str) -> Option<Points> {
+pub fn text_to_point_safely(text: &str) -> Option<Points> {
     if text.len() != 2 || !text.is_ascii() {
         return None;
     }

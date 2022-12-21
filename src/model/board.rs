@@ -13,8 +13,8 @@ pub struct Board {
 
 impl Board {
     pub fn new() -> Board {
-        let player1_stones = to_points(&[(3, 4), (4, 3)]);
-        let player2_stones = to_points(&[(3, 3), (4, 4)]);
+        let player1_stones = coordinates_to_points(&[(3, 4), (4, 3)]);
+        let player2_stones = coordinates_to_points(&[(3, 3), (4, 4)]);
 
         Board {
             player1_stones,
@@ -35,7 +35,7 @@ impl Board {
             let from = 2 * n;
             let to = from + 2;
             let point_text = &text[from..to];
-            let point = to_point(point_text);
+            let point = text_to_point(point_text);
             board = board.place_stone(point);
         }
 
