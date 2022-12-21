@@ -17,13 +17,12 @@ mod searcher_tests {
     }
 
     #[test]
-    fn d1_black_move() {
+    fn d1_from_black() {
         for searcher in searchers() {
-            test_d1_black_move(&*searcher);
+            test_d1_from_black(&*searcher);
         }
     }
-
-    fn test_d1_black_move(searcher: &dyn GameTreeSearcher) {
+    fn test_d1_from_black(searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_moves("F5F4");
         let result = searcher.evaluate_next_moves(&board, 1);
         assert_eq!(result.len(), 5);
@@ -35,13 +34,12 @@ mod searcher_tests {
     }
 
     #[test]
-    fn d1_white_move() {
+    fn d1_from_white() {
         for searcher in searchers() {
-            test_d1_white_move(&*searcher);
+            test_d1_from_white(&*searcher);
         }
     }
-
-    fn test_d1_white_move(searcher: &dyn GameTreeSearcher) {
+    fn test_d1_from_white(searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_moves("F5F4F3");
         let result = searcher.evaluate_next_moves(&board, 1);
         assert_eq!(result.len(), 3);
@@ -56,7 +54,6 @@ mod searcher_tests {
             test_d1_game_end_from_white(&*searcher);
         }
     }
-
     fn test_d1_game_end_from_white(searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_text("
 ○ ○ ○ ○ ○ ○ ○ ○
@@ -75,13 +72,36 @@ mod searcher_tests {
     }
 
     #[test]
-    fn depth2_from_black() {}
+    fn d1_game_end_from_black() {
+        for searcher in searchers() {
+            test_d1_game_end_from_black(&*searcher);
+        }
+    }
+    fn test_d1_game_end_from_black(searcher: &dyn GameTreeSearcher) {
+        let board = Board::new_by_text("
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ○ □
+", PlayerType::First);
+
+        let result = searcher.evaluate_next_moves(&board, 1);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].1, 64);
+    }
+
+    #[test]
+    fn d2_from_black() {}
 
     #[test]
     fn depth3_from_black() {}
 
     #[test]
-    fn depth2_from_white() {}
+    fn d2_from_white() {}
 
     #[test]
     fn depth3_from_white() {}
