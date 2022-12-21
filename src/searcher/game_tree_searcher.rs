@@ -4,8 +4,10 @@ use crate::searcher::Searcher;
 
 pub trait GameTreeSearcher {
     fn evaluate_next_moves(&self, board: &Board, max_depth: u32) -> Vec<(Points, Evaluation)>;
+}
 
-    fn search_best_move(&self, board: &Board, max_depth: u32) -> Points {
+impl <T: GameTreeSearcher> Searcher for T {
+    fn search(&self, board: &Board, max_depth: u32) -> Points {
         let mut result: Option<Points> = None;
         let mut max_score = EVALUATION_MIN;
 
@@ -18,11 +20,5 @@ pub trait GameTreeSearcher {
             }
         }
         return result.unwrap();
-    }
-}
-
-impl Searcher for dyn GameTreeSearcher {
-    fn search(&self, board: &Board, max_depth: u32) -> Points {
-        return self.search_best_move(board, max_depth);
     }
 }

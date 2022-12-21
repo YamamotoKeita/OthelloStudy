@@ -18,6 +18,7 @@ mod searcher;
 mod evaluator;
 mod util;
 mod ai_player;
+mod sandbox;
 
 fn main() {
     let player1 = CuiPlayer::new();

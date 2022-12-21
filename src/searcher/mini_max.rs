@@ -2,16 +2,9 @@ use crate::{Board, PlayerType, POINT_ITERATOR, Points};
 use crate::evaluator::Evaluator;
 use crate::model::evaluation::Evaluation;
 use crate::searcher::game_tree_searcher::GameTreeSearcher;
-use crate::searcher::Searcher;
 
 pub struct MiniMax<T: Evaluator> {
     evaluator: T,
-}
-
-impl <T: Evaluator> Searcher for MiniMax<T> {
-    fn search(&self, board: &Board, max_depth: u32) -> Points {
-        return self.search_best_move(board, max_depth);
-    }
 }
 
 #[allow(dead_code)]

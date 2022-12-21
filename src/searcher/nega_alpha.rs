@@ -3,16 +3,9 @@ use crate::{Board, POINT_ITERATOR, Points};
 use crate::evaluator::Evaluator;
 use crate::model::evaluation::{Evaluation, EVALUATION_MAX, EVALUATION_MIN};
 use crate::searcher::game_tree_searcher::GameTreeSearcher;
-use crate::searcher::Searcher;
 
 pub struct NegaAlpha<T: Evaluator> {
     evaluator: T,
-}
-
-impl <T: Evaluator> Searcher for NegaAlpha<T> {
-    fn search(&self, board: &Board, max_depth: u32) -> Points {
-        return self.search_best_move(board, max_depth);
-    }
 }
 
 impl <T: Evaluator> NegaAlpha<T> {
