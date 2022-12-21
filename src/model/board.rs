@@ -54,6 +54,8 @@ impl Board {
                     player1_stones |= point;
                 } else if c == "○" {
                     player2_stones |= point;
+                } else if c != "□" {
+                    panic!("Invalid character!!");
                 }
             }
         }

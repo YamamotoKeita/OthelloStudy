@@ -226,6 +226,52 @@ mod searcher_tests {
     }
 
     #[test]
+    fn d2_end_from_black() {
+        for searcher in searchers() {
+            test_d2_end_from_black(&*searcher);
+        }
+    }
+    fn test_d2_end_from_black(searcher: &dyn GameTreeSearcher) {
+        let board = Board::new_by_text("
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ○
+● ● ● ● ● ● ● ●
+● ● ● ● ● ○ □ □
+", PlayerType::First);
+
+        let result = searcher.evaluate_next_moves(&board, 2);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].1, 58);
+    }
+
+    #[test]
+    fn d2_end_from_white() {
+        for searcher in searchers() {
+            test_d2_end_from_white(&*searcher);
+        }
+    }
+    fn test_d2_end_from_white(searcher: &dyn GameTreeSearcher) {
+        let board = Board::new_by_text("
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ●
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ● □ □
+", PlayerType::Second);
+
+        let result = searcher.evaluate_next_moves(&board, 2);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].1, 58);
+    }
+
+    #[test]
     fn includes_skipping_turn() {
 
     }
