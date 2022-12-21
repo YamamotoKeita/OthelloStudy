@@ -41,7 +41,7 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
             self.view.place_stone(point, &board, &new_board);
 
             if new_board.placeable_points == 0 {
-                new_board.skip_turn();
+                new_board = new_board.skip_turn();
 
                 if new_board.is_game_end() {
                     break;

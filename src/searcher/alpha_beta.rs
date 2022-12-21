@@ -1,5 +1,5 @@
 use std::cmp::{max, min};
-use crate::{Board, PlayerType, POINT_ITERATOR, Points};
+use crate::{Board, PlayerType, POINT_ITERATOR};
 use crate::evaluator::Evaluator;
 use crate::model::evaluation::{Evaluation, EVALUATION_MAX, EVALUATION_MIN};
 use crate::searcher::game_tree_searcher::GameTreeSearcher;
@@ -16,7 +16,7 @@ impl <T: Evaluator> AlphaBeta<T> {
         }
     }
 
-    fn alpha_beta(&self, mut board: Board, depth: u32, mut alpha: i32, mut beta: i32, player: PlayerType) -> i32 {
+    fn alpha_beta(&self, board: &Board, depth: u32, mut alpha: i32, mut beta: i32, player: PlayerType) -> i32 {
 
         // Evaluates a board on a terminal node
         if depth == 0 || board.is_game_end() {
@@ -25,8 +25,7 @@ impl <T: Evaluator> AlphaBeta<T> {
 
         // Skip and turn change
         if board.placeable_points == 0 {
-            board.skip_turn();
-            return self.alpha_beta(board, depth, alpha, beta, player);
+            return self.alpha_beta(&board.skip_turn(), depth, alpha, beta, player);
         }
 
         return if board.player == PlayerType::First {
@@ -34,7 +33,7 @@ impl <T: Evaluator> AlphaBeta<T> {
                 if !board.can_place(point) { continue; }
 
                 let new_board = board.place_stone(point);
-                let score = self.alpha_beta(new_board, depth - 1, alpha, beta, player);
+                let score = self.alpha_beta(&new_board, depth - 1, alpha, beta, player);
                 alpha = max(alpha, score);
                 if alpha >= beta {
                     break;
@@ -45,8 +44,8 @@ impl <T: Evaluator> AlphaBeta<T> {
             for point in *POINT_ITERATOR {
                 if !board.can_place(point) { continue; }
 
-                let new_board = board.place_stone(point);
-                let score = self.alpha_beta(new_board, depth - 1, alpha, beta, player);
+                let mut new_board = board.place_stone(point);
+                let score = self.alpha_beta(&mut new_board, depth - 1, alpha, beta, player);
                 beta = min(beta, score);
                 if alpha >= beta {
                     break;
@@ -58,20 +57,7 @@ impl <T: Evaluator> AlphaBeta<T> {
 }
 
 impl <T: Evaluator> GameTreeSearcher for AlphaBeta<T> {
-    fn evaluate_next_moves(&self, board: &Board, max_depth: u32) -> Vec<(Points, Evaluation)> {
-        let alpha = EVALUATION_MIN;
-        let beta = EVALUATION_MAX;
-
-        let mut result: Vec<(Points, Evaluation)> = vec![];
-
-        for point in *POINT_ITERATOR {
-            if board.can_place(point) {
-                let new_board = board.place_stone(point);
-                let score = self.alpha_beta(new_board, max_depth - 1, alpha, beta, board.player);
-                result.push((point, score));
-            }
-        }
-
-        return result;
+    fn evaluate_child_board(&self, board: &Board, child_board: &Board, depth: u32) -> Evaluation {
+        self.alpha_beta(child_board, depth, EVALUATION_MIN, EVALUATION_MAX, board.player)
     }
 }

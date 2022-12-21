@@ -63,7 +63,7 @@ mod searcher_tests {
         test_game_end(&mini_max());
     }
 
-    fn test_game_end(searcher: &dyn GameTreeSearcher) {
+    fn test_game_end(_searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_text("
 ○ ○ ○ ○ ○ ○ ○ ○
 ○ ○ ○ ○ ○ ○ ○ ○
