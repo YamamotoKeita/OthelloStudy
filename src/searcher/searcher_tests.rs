@@ -3,18 +3,23 @@
 #[allow(unused_imports)]
 mod searcher_tests {
     use crate::evaluator::stone_count::StoneCountEvaluator;
-    use crate::{Board, CuiView, NegaAlpha, PlayerType, points_to_str};
+    use crate::{Board, CuiView, NegaAlpha, PlayerType, Points, points_to_str};
+    use crate::model::evaluation::Evaluation;
     use crate::searcher::alpha_beta::AlphaBeta;
     use crate::searcher::game_tree_searcher::GameTreeSearcher;
     use crate::searcher::mini_max::MiniMax;
 
     fn searchers() -> Vec<Box<dyn GameTreeSearcher>> {
         vec![
-            Box::new(MiniMax::new(StoneCountEvaluator::new())),
-            Box::new(AlphaBeta::new(StoneCountEvaluator::new())),
-            Box::new(NegaAlpha::new(StoneCountEvaluator::new())),
+            Box::new(min_max()),
+            Box::new(alpha_beta()),
+            Box::new(nega_alpha()),
         ]
     }
+
+    fn min_max() -> MiniMax<StoneCountEvaluator> {MiniMax::new(StoneCountEvaluator::new())}
+    fn alpha_beta() -> AlphaBeta<StoneCountEvaluator> {AlphaBeta::new(StoneCountEvaluator::new())}
+    fn nega_alpha() -> NegaAlpha<StoneCountEvaluator> {NegaAlpha::new(StoneCountEvaluator::new())}
 
     #[test]
     fn d1_from_black() {
@@ -48,36 +53,139 @@ mod searcher_tests {
         assert_eq!(result[2].1, 0);
     }
 
+
     #[test]
-    fn d1_game_end_from_white() {
+    fn d2_from_black() {
         for searcher in searchers() {
-            test_d1_game_end_from_white(&*searcher);
+            test_d2_from_black(&*searcher);
         }
     }
-    fn test_d1_game_end_from_white(searcher: &dyn GameTreeSearcher) {
+    fn test_d2_from_black(searcher: &dyn GameTreeSearcher) {
+        let board = Board::new_by_text("
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ○ ●
+● ● ● ● ● ● ● ●
+● ● ● ● ○ □ □ □
+", PlayerType::First);
+
+        let result = searcher.evaluate_next_moves(&board, 2);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].1, 57);
+    }
+
+    #[test]
+    fn d2_from_white() {
+        for searcher in searchers() {
+            test_d2_from_white(&*searcher);
+        }
+    }
+    fn test_d2_from_white(searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_text("
 ○ ○ ○ ○ ○ ○ ○ ○
 ○ ○ ○ ○ ○ ○ ○ ○
 ○ ○ ○ ○ ○ ○ ○ ○
 ○ ○ ○ ○ ○ ○ ○ ○
 ○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ● ○
 ○ ○ ○ ○ ○ ○ ○ ○
-○ ○ ○ ○ ○ ○ ○ ○
-○ ○ ○ ○ ○ ○ ● □
+○ ○ ○ ○ ● □ □ □
 ", PlayerType::Second);
 
-        let result = searcher.evaluate_next_moves(&board, 1);
+        let result = searcher.evaluate_next_moves(&board, 2);
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0].1, 64);
+        assert_eq!(result[0].1, 57);
     }
 
     #[test]
-    fn d1_game_end_from_black() {
+    fn d3_from_black_consistent() {
+        let mut results: Vec<Vec<(Points, Evaluation)>> = vec![];
         for searcher in searchers() {
-            test_d1_game_end_from_black(&*searcher);
+            let board = Board::new_by_moves("F5F4");
+            let result = searcher.evaluate_next_moves(&board, 3);
+            results.push(result);
+        }
+
+        let first_result = results.first().unwrap();
+
+        for result in &results {
+            assert_eq!(result.len(), first_result.len());
+            for n in 0..first_result.len() {
+                assert_eq!(result[n].0, first_result[n].0);
+                assert_eq!(result[n].1, first_result[n].1);
+            }
         }
     }
-    fn test_d1_game_end_from_black(searcher: &dyn GameTreeSearcher) {
+
+    #[test]
+    fn d4_from_black_consistent() {
+        let mut results: Vec<Vec<(Points, Evaluation)>> = vec![];
+        for searcher in searchers() {
+            let board = Board::new_by_moves("F5F4");
+            let result = searcher.evaluate_next_moves(&board, 4);
+            results.push(result);
+        }
+
+        let first_result = results.first().unwrap();
+
+        for result in &results {
+            assert_eq!(result.len(), first_result.len());
+            for n in 0..first_result.len() {
+                assert_eq!(result[n].0, first_result[n].0);
+                assert_eq!(result[n].1, first_result[n].1);
+            }
+        }
+    }
+
+    #[test]
+    fn d3_from_white_consistent() {
+        let mut results: Vec<Vec<(Points, Evaluation)>> = vec![];
+        for searcher in searchers() {
+            let board = Board::new_by_moves("F5F4G3");
+            let result = searcher.evaluate_next_moves(&board, 3);
+            results.push(result);
+        }
+
+        let first_result = results.first().unwrap();
+
+        for result in &results {
+            assert_eq!(result.len(), first_result.len());
+            for n in 0..first_result.len() {
+                assert_eq!(result[n].0, first_result[n].0);
+                assert_eq!(result[n].1, first_result[n].1);
+            }
+        }
+    }
+
+    #[test]
+    fn d4_from_white_consistent() {
+        let mut results: Vec<Vec<(Points, Evaluation)>> = vec![];
+        for searcher in searchers() {
+            let board = Board::new_by_moves("F5F4G3");
+            let result = searcher.evaluate_next_moves(&board, 4);
+            results.push(result);
+        }
+
+        let first_result = results.first().unwrap();
+        for result in &results {
+            assert_eq!(result.len(), first_result.len());
+            for n in 0..first_result.len() {
+                assert_eq!(result[n].0, first_result[n].0);
+                assert_eq!(result[n].1, first_result[n].1);
+            }
+        }
+    }
+
+    #[test]
+    fn d1_end_from_black() {
+        for searcher in searchers() {
+            test_d1_end_from_black(&*searcher);
+        }
+    }
+    fn test_d1_end_from_black(searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_text("
 ● ● ● ● ● ● ● ●
 ● ● ● ● ● ● ● ●
@@ -95,16 +203,27 @@ mod searcher_tests {
     }
 
     #[test]
-    fn d2_from_black() {}
+    fn d1_end_from_white() {
+        for searcher in searchers() {
+            test_d1_end_from_white(&*searcher);
+        }
+    }
+    fn test_d1_end_from_white(searcher: &dyn GameTreeSearcher) {
+        let board = Board::new_by_text("
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ● □
+", PlayerType::Second);
 
-    #[test]
-    fn depth3_from_black() {}
-
-    #[test]
-    fn d2_from_white() {}
-
-    #[test]
-    fn depth3_from_white() {}
+        let result = searcher.evaluate_next_moves(&board, 1);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].1, 64);
+    }
 
     #[test]
     fn includes_skipping_turn() {

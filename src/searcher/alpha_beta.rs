@@ -28,7 +28,7 @@ impl <T: Evaluator> AlphaBeta<T> {
             return self.alpha_beta(&board.skip_turn(), depth, alpha, beta, player);
         }
 
-        return if board.player == PlayerType::First {
+        return if board.player == player {
             for point in *POINT_ITERATOR {
                 if !board.can_place(point) { continue; }
 
