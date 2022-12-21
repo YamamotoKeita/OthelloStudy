@@ -272,13 +272,56 @@ mod searcher_tests {
     }
 
     #[test]
-    fn includes_skipping_turn() {
+    fn d3_end_from_black() {}
 
+    #[test]
+    fn d3_end_from_white() {}
+
+    #[test]
+    fn d2_including_skip_from_black() {}
+
+    #[test]
+    fn d2_including_skip_from_white() {}
+
+    #[test]
+    fn d3_including_skip_from_black() {}
+
+    #[test]
+    fn d3_including_skip_from_white() {}
+
+    #[test]
+    fn d2_middle_end_from_black() {
+        for searcher in searchers() {
+            test_d2_middle_end_from_black(&*searcher);
+        }
+    }
+    fn test_d2_middle_end_from_black(searcher: &dyn GameTreeSearcher) {
+        let board = Board::new_by_text("
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ○ □ □
+", PlayerType::First);
+
+        let result = searcher.evaluate_next_moves(&board, 2);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].1, 63);
     }
 
     #[test]
-    fn end_of_game_in_middle_stages() {
+    fn d2_middle_end_from_white() {
+    }
 
+    #[test]
+    fn d3_middle_end_from_black() {
+    }
+
+    #[test]
+    fn d3_middle_end_from_white() {
     }
 
 }
