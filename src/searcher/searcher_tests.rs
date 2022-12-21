@@ -186,10 +186,12 @@ mod searcher_tests {
     #[test]
     fn d1_end_from_black() {
         for searcher in searchers() {
-            test_d1_end_from_black(&*searcher);
+            test_d1_end_from_black(&*searcher, 1);
+            test_d1_end_from_black(&*searcher, 2);
+            test_d1_end_from_black(&*searcher, 3);
         }
     }
-    fn test_d1_end_from_black(searcher: &dyn GameTreeSearcher) {
+    fn test_d1_end_from_black(searcher: &dyn GameTreeSearcher, depth: u32) {
         let board = Board::new_by_text("
 ● ● ● ● ● ● ● ●
 ● ● ● ● ● ● ● ●
@@ -201,7 +203,7 @@ mod searcher_tests {
 ● ● ● ● ● ● ○ □
 ", PlayerType::First);
 
-        let result = searcher.evaluate_next_moves(&board, 1);
+        let result = searcher.evaluate_next_moves(&board, depth);
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].1, 64);
     }
@@ -209,10 +211,12 @@ mod searcher_tests {
     #[test]
     fn d1_end_from_white() {
         for searcher in searchers() {
-            test_d1_end_from_white(&*searcher);
+            test_d1_end_from_white(&*searcher, 1);
+            test_d1_end_from_white(&*searcher, 2);
+            test_d1_end_from_white(&*searcher, 3);
         }
     }
-    fn test_d1_end_from_white(searcher: &dyn GameTreeSearcher) {
+    fn test_d1_end_from_white(searcher: &dyn GameTreeSearcher, depth: u32) {
         let board = Board::new_by_text("
 ○ ○ ○ ○ ○ ○ ○ ○
 ○ ○ ○ ○ ○ ○ ○ ○
@@ -224,7 +228,7 @@ mod searcher_tests {
 ○ ○ ○ ○ ○ ○ ● □
 ", PlayerType::Second);
 
-        let result = searcher.evaluate_next_moves(&board, 1);
+        let result = searcher.evaluate_next_moves(&board, depth);
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].1, 64);
     }
@@ -232,10 +236,12 @@ mod searcher_tests {
     #[test]
     fn d2_end_from_black() {
         for searcher in searchers() {
-            test_d2_end_from_black(&*searcher);
+            test_d2_end_from_black(&*searcher, 2);
+            test_d2_end_from_black(&*searcher, 3);
+            test_d2_end_from_black(&*searcher, 4);
         }
     }
-    fn test_d2_end_from_black(searcher: &dyn GameTreeSearcher) {
+    fn test_d2_end_from_black(searcher: &dyn GameTreeSearcher, depth: u32) {
         let board = Board::new_by_text("
 ● ● ● ● ● ● ● ●
 ● ● ● ● ● ● ● ●
@@ -247,7 +253,7 @@ mod searcher_tests {
 ● ● ● ● ● ○ □ □
 ", PlayerType::First);
 
-        let result = searcher.evaluate_next_moves(&board, 2);
+        let result = searcher.evaluate_next_moves(&board, depth);
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].1, 58);
     }
@@ -255,10 +261,12 @@ mod searcher_tests {
     #[test]
     fn d2_end_from_white() {
         for searcher in searchers() {
-            test_d2_end_from_white(&*searcher);
+            test_d2_end_from_white(&*searcher, 2);
+            test_d2_end_from_white(&*searcher, 3);
+            test_d2_end_from_white(&*searcher, 4);
         }
     }
-    fn test_d2_end_from_white(searcher: &dyn GameTreeSearcher) {
+    fn test_d2_end_from_white(searcher: &dyn GameTreeSearcher, depth: u32) {
         let board = Board::new_by_text("
 ○ ○ ○ ○ ○ ○ ○ ○
 ○ ○ ○ ○ ○ ○ ○ ○
@@ -270,7 +278,7 @@ mod searcher_tests {
 ○ ○ ○ ○ ○ ● □ □
 ", PlayerType::Second);
 
-        let result = searcher.evaluate_next_moves(&board, 2);
+        let result = searcher.evaluate_next_moves(&board, depth);
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].1, 58);
     }
