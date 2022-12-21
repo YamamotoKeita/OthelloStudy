@@ -44,10 +44,14 @@ pub fn xy_to_point(x: u32, y: u32) -> Points {
     1_u64 << y_shift * 8 + x_shift
 }
 
+pub fn to_point(text: &str) -> Points {
+    to_point_safely(text).unwrap()
+}
+
 /*
  * Convert a location text (such as "1A", "3C") to a point.
  */
-pub fn to_point(text: &str) -> Option<Points> {
+pub fn to_point_safely(text: &str) -> Option<Points> {
     if text.len() != 2 || !text.is_ascii() {
         return None;
     }

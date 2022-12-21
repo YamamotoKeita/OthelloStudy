@@ -25,6 +25,22 @@ impl Board {
         }
     }
 
+    pub fn new_by_moves(text: &str) -> Board {
+        let mut board = Board::new();
+
+        let len = text.len() / 2;
+
+        for n in 0..len {
+            let from = 2 * n;
+            let to = from + 2;
+            let point_text = &text[from..to];
+            let point = to_point(point_text);
+            board = board.place_stone(point);
+        }
+
+        board
+    }
+
     /*
      * Place a stone and reverse opposite stones.
      */
