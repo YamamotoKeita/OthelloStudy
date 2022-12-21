@@ -35,8 +35,7 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
             self.view.wait_next_move(&board);
 
             // Place a stone
-            let player_type = board.player.unwrap();
-            let player = self.get_player(player_type);
+            let player = self.get_player(board.player);
             let point = player.play(&board);
             let mut new_board = board.place_stone(point);
             self.view.place_stone(point, &board, &new_board);
@@ -47,7 +46,7 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
                 if new_board.is_game_end() {
                     break;
                 } else {
-                    self.view.skipped(player_type.opposite());
+                    self.view.skipped(board.player.opposite());
                 }
             }
 
@@ -61,6 +60,7 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
         match player {
             PlayerType::First => &self.first_player,
             PlayerType::Second => &self.second_player,
+            PlayerType::None => panic!("Use a player when there is no player."),
         }
     }
 }

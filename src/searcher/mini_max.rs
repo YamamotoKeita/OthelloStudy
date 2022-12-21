@@ -34,7 +34,7 @@ impl <T: Evaluator> MiniMax<T> {
             return self.mini_max(board, depth, player);
         }
 
-        return if board.player.unwrap() == player {
+        return if board.player == player {
             let mut max = i32::MIN;
             for point in *POINT_ITERATOR {
                 if !board.can_place(point) { continue; }
@@ -69,7 +69,7 @@ impl <T: Evaluator> GameTreeSearcher for MiniMax<T> {
         for point in *POINT_ITERATOR {
             if board.can_place(point) {
                 let new_board = board.place_stone(point);
-                let score = self.mini_max(new_board, max_depth - 1, board.player.unwrap());
+                let score = self.mini_max(new_board, max_depth - 1, board.player);
                 result.push((point, score));
             }
         }

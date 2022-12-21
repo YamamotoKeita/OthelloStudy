@@ -1,5 +1,5 @@
 use std::cmp::max;
-use crate::{Board, PlayerType, POINT_ITERATOR, Points};
+use crate::{Board, POINT_ITERATOR, Points};
 use crate::evaluator::Evaluator;
 use crate::searcher::game_tree_searcher::GameTreeSearcher;
 use crate::searcher::Searcher;
@@ -24,8 +24,7 @@ impl <T: Evaluator> NegaAlpha<T> {
     fn nega_alpha(&self, mut board: Board, depth: u32, mut alpha: i32, beta: i32) -> i32 {
         // Evaluates a board on a terminal node
         if depth == 0 || board.is_game_end() {
-            let sign = if board.player.unwrap() == PlayerType::First { 1 } else { -1 };
-            return self.evaluator.evaluate(&board) * sign;
+            return self.evaluator.evaluate(&board) * board.player.sign();
         }
 
         // Skip and turn change

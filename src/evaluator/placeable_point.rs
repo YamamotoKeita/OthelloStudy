@@ -5,10 +5,9 @@ pub struct PlaceablePointEvaluator {}
 
 impl Evaluator for PlaceablePointEvaluator {
     fn evaluate(&self, board: &Board) -> i32 {
-        let player = board.player.unwrap();
-        let count = board.count_stones(player);
+        let count = board.count_stones(board.player);
 
-        if player == PlayerType::First {
+        if board.player == PlayerType::First {
             count
         } else {
             -count

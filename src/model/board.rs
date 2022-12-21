@@ -7,7 +7,7 @@ pub struct Board {
     pub player1_stones: Points,
     pub player2_stones: Points,
     pub stone_count: u32,
-    pub player: Option<PlayerType>,
+    pub player: PlayerType,
     pub placeable_points: Points,
 }
 
@@ -20,7 +20,7 @@ impl Board {
             player1_stones,
             player2_stones,
             stone_count: 4,
-            player: Some(PlayerType::First),
+            player: PlayerType::First,
             placeable_points: Board::placeable_points(player1_stones, player2_stones),
         }
     }
@@ -45,11 +45,9 @@ impl Board {
      * Place a stone and reverse opposite stones.
      */
     pub fn place_stone(&self, point: Points) -> Board {
-        let player = self.player.unwrap();
-
         let mut reversed: u64 = 0;
-        let mut player_stones = self.get_stones(player);
-        let mut opponent_stones = self.get_stones(player.opposite());
+        let mut player_stones = self.get_stones(self.player);
+        let mut opponent_stones = self.get_stones(self.player.opposite());
 
         for direction in Direction::iterator() {
             let mut line: u64 = 0;
@@ -71,19 +69,19 @@ impl Board {
 
         let stone_count = self.stone_count + 1;
 
-        let (player1_stones, player2_stones) = match player {
+        let (player1_stones, player2_stones) = match self.player {
             PlayerType::First => (player_stones, opponent_stones),
             PlayerType::Second => (opponent_stones, player_stones),
+            PlayerType::None => panic!("Use a player when there is no player."),
         };
 
-        let next_player = Some(player.opposite());
         let placeable_points = Board::placeable_points(opponent_stones, player_stones);
 
         Board {
             player1_stones,
             player2_stones,
             stone_count,
-            player: next_player,
+            player: self.player.opposite(),
             placeable_points,
         }
     }
@@ -92,21 +90,17 @@ impl Board {
      * Skips the turn of self.next_player, then if there are no placeable points, set next_player None.
      */
     pub fn skip_turn(&mut self) {
-        let player = self.player.unwrap();
-        let next_player = player.opposite();
-        self.player = Some(next_player);
-
-        let player_stones = self.get_stones(next_player);
-        let opponent_stones = self.get_stones(player);
+        let player_stones = self.get_stones(self.player);
+        let opponent_stones = self.get_stones(self.player.opposite());
         self.placeable_points = Board::placeable_points(player_stones, opponent_stones);
 
         if self.placeable_points == 0 {
-            self.player = None;
+            self.player = PlayerType::None;
         }
     }
 
     pub fn is_game_end(&self) -> bool {
-        self.player.is_none()
+        self.player == PlayerType::None
     }
 
     #[inline(always)]
@@ -163,6 +157,7 @@ impl Board {
         match player {
             PlayerType::First => self.player1_stones,
             PlayerType::Second => self.player2_stones,
+            PlayerType::None => panic!("Use a player when there is no player."),
         }
     }
 
@@ -172,6 +167,7 @@ impl Board {
         match player {
             PlayerType::First => &mut self.player1_stones,
             PlayerType::Second => &mut self.player2_stones,
+            PlayerType::None => panic!("Use a player when there is no player."),
         }
     }
 }

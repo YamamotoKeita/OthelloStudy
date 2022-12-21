@@ -35,7 +35,7 @@ impl <T: Evaluator> AlphaBeta<T> {
             return self.alpha_beta(board, depth, alpha, beta, player);
         }
 
-        return if board.player.unwrap() == PlayerType::First {
+        return if board.player == PlayerType::First {
             for point in *POINT_ITERATOR {
                 if !board.can_place(point) { continue; }
 
@@ -74,7 +74,7 @@ impl <T: Evaluator> GameTreeSearcher for AlphaBeta<T> {
         for point in *POINT_ITERATOR {
             if board.can_place(point) {
                 let new_board = board.place_stone(point);
-                let score = self.alpha_beta(new_board, max_depth - 1, alpha, beta, board.player.unwrap());
+                let score = self.alpha_beta(new_board, max_depth - 1, alpha, beta, board.player);
                 result.push((point, score));
             }
         }

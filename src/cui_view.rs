@@ -50,6 +50,7 @@ impl CuiView {
         match player {
             PlayerType::First => &self.player1_stone,
             PlayerType::Second => &self.player2_stone,
+            PlayerType::None => panic!("Use a player when there is no player."),
         }
     }
 }
@@ -59,7 +60,7 @@ impl OthelloView for CuiView  {
         let text = self.to_str(board);
         println!("{}", text);
 
-        let stone = self.get_stone_ref(board.player.unwrap());
+        let stone = self.get_stone_ref(board.player);
         println!("{} Turn", stone);
     }
 

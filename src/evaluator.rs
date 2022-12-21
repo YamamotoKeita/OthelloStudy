@@ -9,9 +9,12 @@ pub mod simple_prediction;
 
 pub trait Evaluator {
     /*
-     * Rules of evaluation is the followings.
+     * Evaluates a board.
      *
-     * - 0 for even, positive value for first player advantage, negative value for second player advantage
+     * The evaluation is for the first(black) player.
+     * If the first(black) and second(white) player are equal in the advantage, the evaluation is zero.
+     * If the first(black) player has the advantage, the evaluation is a positive number.
+     * If the second(white) player has the advantage, the evaluation is a negative number.
      */
     fn evaluate(&self, board: &Board) -> i32;
 }
