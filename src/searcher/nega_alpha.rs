@@ -1,5 +1,5 @@
 use std::cmp::max;
-use crate::{Board, POINT_ITERATOR};
+use crate::{Board, PlayerType, POINT_ITERATOR};
 use crate::evaluator::Evaluator;
 use crate::model::evaluation::{Evaluation, EVALUATION_MAX, EVALUATION_MIN};
 use crate::searcher::game_tree_searcher::GameTreeSearcher;
@@ -15,22 +15,22 @@ impl <T: Evaluator> NegaAlpha<T> {
         }
     }
 
-    fn nega_alpha(&self, board: &Board, depth: u32, mut alpha: i32, beta: i32) -> i32 {
+    fn nega_alpha(&self, board: &Board, depth: u32, mut alpha: i32, beta: i32, last_player: PlayerType) -> i32 {
         // Evaluates a board on a terminal node
         if depth == 0 || board.is_game_end() {
-            return self.evaluator.evaluate(&board) * board.player.sign();
+            return self.evaluator.evaluate(&board) * last_player.opposite().sign();
         }
 
         // Skip and turn change
         if board.placeable_points == 0 {
-            return -self.nega_alpha(&board.skip_turn(), depth, -beta, -alpha);
+            return self.nega_alpha(&board.skip_turn(), depth, alpha, beta, last_player);
         }
 
         for point in *POINT_ITERATOR {
             if !board.can_place(point) { continue; }
 
             let new_board = board.place_stone(point);
-            let score = -self.nega_alpha(&new_board, depth - 1, -beta, -alpha);
+            let score = -self.nega_alpha(&new_board, depth - 1, -beta, -alpha, board.player);
 
             // pruning
             if score >= beta {
@@ -45,7 +45,7 @@ impl <T: Evaluator> NegaAlpha<T> {
 }
 
 impl <T: Evaluator> GameTreeSearcher for NegaAlpha<T> {
-    fn evaluate_child_board(&self, _board: &Board, child_board: &Board, depth: u32) -> Evaluation {
-        -self.nega_alpha(child_board, depth, -EVALUATION_MAX, -EVALUATION_MIN)
+    fn evaluate_child_board(&self, board: &Board, child_board: &Board, depth: u32) -> Evaluation {
+        -self.nega_alpha(child_board, depth, -EVALUATION_MAX, -EVALUATION_MIN, board.player)
     }
 }

@@ -144,6 +144,14 @@ impl Board {
         }
     }
 
+    pub fn change_turn(&mut self) {
+        self.player = self.player.opposite();
+
+        let player_stones = self.get_stones(self.player);
+        let opponent_stones = self.get_stones(self.player.opposite());
+        self.placeable_points = Board::placeable_points(player_stones, opponent_stones);
+    }
+
     pub fn is_game_end(&self) -> bool {
         self.player == PlayerType::None
     }
@@ -241,5 +249,15 @@ impl Board {
 
 
         return result;
+    }
+
+    pub fn clone(&self) -> Board {
+        Board {
+            player1_stones: self.player1_stones,
+            player2_stones: self.player2_stones,
+            stone_count: self.stone_count,
+            player: self.player,
+            placeable_points: self.placeable_points,
+        }
     }
 }

@@ -4,22 +4,26 @@
 mod searcher_tests {
     use crate::evaluator::stone_count::StoneCountEvaluator;
     use crate::{Board, CuiView, NegaAlpha, PlayerType, Points, points_to_str};
+    use crate::evaluator::stone_count_nyanyan::StoneCountNyanyanEvaluator;
     use crate::model::evaluation::Evaluation;
     use crate::searcher::alpha_beta::AlphaBeta;
     use crate::searcher::game_tree_searcher::GameTreeSearcher;
     use crate::searcher::mini_max::MiniMax;
+    use crate::searcher::nega_max_nyanyan::NegaMaxNyanyan;
 
     fn searchers() -> Vec<Box<dyn GameTreeSearcher>> {
         vec![
             Box::new(min_max()),
             Box::new(alpha_beta()),
             Box::new(nega_alpha()),
+            Box::new(nega_max_nyanyan()),
         ]
     }
 
     fn min_max() -> MiniMax<StoneCountEvaluator> {MiniMax::new(StoneCountEvaluator::new())}
     fn alpha_beta() -> AlphaBeta<StoneCountEvaluator> {AlphaBeta::new(StoneCountEvaluator::new())}
     fn nega_alpha() -> NegaAlpha<StoneCountEvaluator> {NegaAlpha::new(StoneCountEvaluator::new())}
+    fn nega_max_nyanyan() -> NegaMaxNyanyan<StoneCountNyanyanEvaluator> {NegaMaxNyanyan::new(StoneCountNyanyanEvaluator::new())}
 
     #[test]
     fn d1_from_black() {

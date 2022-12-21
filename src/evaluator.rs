@@ -7,6 +7,7 @@ pub mod placeable_point;
 pub mod open_count;
 pub mod game_evaluator;
 pub mod simple_prediction;
+pub mod stone_count_nyanyan;
 
 pub trait Evaluator {
     /*
