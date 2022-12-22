@@ -17,13 +17,18 @@ impl <T: Evaluator> NegaAlpha<T> {
 
     fn nega_alpha(&self, board: &Board, depth: u32, mut alpha: i32, beta: i32, last_player: PlayerType) -> i32 {
         // Evaluates a board on a terminal node
-        if depth == 0 || board.is_game_end() {
+        if depth == 0 {
             return self.evaluator.evaluate(&board) * last_player.opposite().sign();
         }
 
         // Skip and turn change
         if board.placeable_points == 0 {
-            return -self.nega_alpha(&board.skip_turn(), depth, -beta, -alpha, last_player);
+            let new_board = board.skip_turn();
+            return if new_board.is_game_end() {
+                self.evaluator.evaluate(&board) * last_player.opposite().sign()
+            } else {
+                -self.nega_alpha(&new_board, depth, -beta, -alpha, last_player)
+            }
         }
 
         for point in *POINT_ITERATOR {

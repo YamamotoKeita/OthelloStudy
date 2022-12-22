@@ -323,6 +323,7 @@ mod searcher_tests {
         for searcher in searchers() {
             test_d3_2branches_end_from_black(&*searcher, 3);
             test_d3_2branches_end_from_black(&*searcher, 4);
+            test_d3_2branches_end_from_black(&*searcher, 5);
         }
     }
     fn test_d3_2branches_end_from_black(searcher: &dyn GameTreeSearcher, depth: u32) {
