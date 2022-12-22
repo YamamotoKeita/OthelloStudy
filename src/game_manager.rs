@@ -4,10 +4,12 @@ use crate::PlayerType;
 
 pub trait Player {
     fn play(&self, board: &Board) -> Points;
+    fn message_before_play(&self, board: &Board) -> Option<String>;
 }
 
 pub trait OthelloView {
     fn wait_next_move(&self, board: &Board);
+    fn send_message(&self, text: String);
     fn place_stone(&self, point: Points, before: &Board, after: &Board);
     fn skipped(&self, player: PlayerType);
     fn game_end(&self, board: &Board);
@@ -36,6 +38,12 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
 
             // Place a stone
             let player = self.get_player(board.player);
+
+            let message = player.message_before_play(&board);
+            if let Some(message) = message {
+                self.view.send_message(message);
+            }
+
             let point = player.play(&board);
             let mut new_board = board.place_stone(point);
             self.view.place_stone(point, &board, &new_board);

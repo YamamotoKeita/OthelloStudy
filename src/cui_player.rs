@@ -32,4 +32,8 @@ impl Player for CuiPlayer {
             }
         }
     }
+
+    fn message_before_play(&self, _board: &Board) -> Option<String> {
+        None
+    }
 }

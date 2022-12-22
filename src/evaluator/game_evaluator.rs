@@ -22,7 +22,7 @@ impl <T: Evaluator> Evaluator for GameEvaluator<T> {
 impl <T: Evaluator> GameEvaluator<T> {
     pub fn new(evaluator: T) -> GameEvaluator<T> {
         GameEvaluator {
-            end_evaluator: StoneCountEvaluator::new(),
+            end_evaluator: StoneCountEvaluator::new_with_weight(100),
             evaluator,
         }
     }

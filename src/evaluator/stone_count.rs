@@ -19,4 +19,8 @@ impl StoneCountEvaluator {
     pub fn new() -> StoneCountEvaluator {
         StoneCountEvaluator {stone_weight: 1}
     }
+    pub fn new_with_weight(stone_weight: i32) -> StoneCountEvaluator {
+        StoneCountEvaluator {stone_weight}
+    }
+
 }

@@ -19,11 +19,12 @@ impl CuiView {
     pub fn to_str(&self, board: &Board) -> String {
         let mut result = "".to_string();
 
-        let border = "  +---+---+---+---+---+---+---+---+\n";
+        let border = "  +---+---+---+---+---+---+---+---+";
         result.push_str("    A   B   C   D   E   F   G   H\n");
 
         for y in 0..=7 {
             result.push_str(border);
+            result.push_str("\n");
             result.push_str(&((y + 1).to_string() + " "));
 
             for x in 0..=7 {
@@ -62,6 +63,10 @@ impl OthelloView for CuiView  {
 
         let stone = self.get_stone_ref(board.player);
         println!("{} Turn", stone);
+    }
+
+    fn send_message(&self, text: String) {
+        println!("{}", text);
     }
 
     fn place_stone(&self, _point: Points, _before: &Board, _after: &Board) {
