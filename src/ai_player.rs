@@ -34,11 +34,11 @@ impl <T: Searcher> AiPlayer<T> {
 
 impl <T: Searcher> Player for AiPlayer<T> {
     fn play(&self, board: &Board) -> Points {
-        self.searcher.search(board, self.get_depth(board.stone_count))
+        self.searcher.search(board, self.get_depth(board.stone_count() as u32))
     }
 
     fn message_before_play(&self, board: &Board) -> Option<String> {
-        Some(format!("Turn={}, Depth={}", board.stone_count - 3, self.get_depth(board.stone_count)))
+        Some(format!("Turn={}, Depth={}", board.stone_count() - 3, self.get_depth(board.stone_count() as u32)))
     }
 
 }

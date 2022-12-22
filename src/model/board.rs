@@ -6,7 +6,6 @@ use crate::{Direction, shift_points, PlayerType};
 pub struct Board {
     pub player1_stones: Points,
     pub player2_stones: Points,
-    pub stone_count: u32,
     pub player: PlayerType,
     pub placeable_points: Points,
 }
@@ -19,7 +18,6 @@ impl Board {
         Board {
             player1_stones,
             player2_stones,
-            stone_count: 4,
             player: PlayerType::First,
             placeable_points: Board::placeable_points(player1_stones, player2_stones),
         }
@@ -69,10 +67,13 @@ impl Board {
         Board {
             player1_stones,
             player2_stones,
-            stone_count: player1_stones.count_ones() + player2_stones.count_ones(),
             player,
             placeable_points: Board::placeable_points(player_stones, opponent_stones),
         }
+    }
+
+    pub fn stone_count(&self) -> i32 {
+        (self.player1_stones.count_ones() + self.player2_stones.count_ones()) as i32
     }
 
     /*
@@ -101,8 +102,6 @@ impl Board {
         player_stones ^= point | reversed;
         opponent_stones ^= reversed;
 
-        let stone_count = self.stone_count + 1;
-
         let (player1_stones, player2_stones) = match self.player {
             PlayerType::First => (player_stones, opponent_stones),
             PlayerType::Second => (opponent_stones, player_stones),
@@ -114,7 +113,6 @@ impl Board {
         Board {
             player1_stones,
             player2_stones,
-            stone_count,
             player: self.player.opposite(),
             placeable_points,
         }
@@ -138,7 +136,6 @@ impl Board {
         Board {
             player1_stones: self.player1_stones,
             player2_stones: self.player2_stones,
-            stone_count: self.stone_count,
             player: new_player,
             placeable_points
         }
@@ -153,7 +150,6 @@ impl Board {
     }
 
     pub fn is_game_end(&self) -> bool {
-        // TODO For farther performance, should I test "self.stone_count == 64" first?
         self.player == PlayerType::None
     }
 
@@ -256,7 +252,6 @@ impl Board {
         Board {
             player1_stones: self.player1_stones,
             player2_stones: self.player2_stones,
-            stone_count: self.stone_count,
             player: self.player,
             placeable_points: self.placeable_points,
         }
