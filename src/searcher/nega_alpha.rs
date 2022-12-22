@@ -23,7 +23,7 @@ impl <T: Evaluator> NegaAlpha<T> {
 
         // Skip and turn change
         if board.placeable_points == 0 {
-            return self.nega_alpha(&board.skip_turn(), depth, alpha, beta, last_player);
+            return -self.nega_alpha(&board.skip_turn(), depth, -beta, -alpha, last_player);
         }
 
         for point in *POINT_ITERATOR {
