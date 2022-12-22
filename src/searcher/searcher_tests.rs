@@ -370,6 +370,77 @@ mod searcher_tests {
         assert_eq!(result[1].1, 58);
     }
 
+    /*
+        Root
+        Black(●) Turn
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ○ ○
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ○ □ □ □
+
+        D1
+        White(○) Turn
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ○ ○
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● □ □
+
+        D2
+        Black Turn        White Turn (Black skipped)
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ○ ○   ● ● ● ● ● ● ○ ○
+        ● ● ● ● ● ● ○ ●   ● ● ● ● ● ● ● ○
+        ● ● ● ● ● ● ○ □   ● ● ● ● ● ● □ ○
+
+        D3
+        End
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ○ ○   ● ● ● ● ● ● ○ ○
+        ● ● ● ● ● ● ○ ●   ● ● ● ● ● ● ○ ○
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ○ ○
+        61 - 3 = 58       58 - 6 = 52
+     */
+    #[test]
+    fn d3_2branches_end_from_black_2() {
+        for searcher in searchers() {
+            test_d3_2branches_end_from_black_2(&*searcher, 3);
+            test_d3_2branches_end_from_black_2(&*searcher, 4);
+            test_d3_2branches_end_from_black_2(&*searcher, 5);
+        }
+    }
+    fn test_d3_2branches_end_from_black_2(searcher: &dyn GameTreeSearcher, depth: u32) {
+        let board = Board::new_by_text("
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ○ ○
+● ● ● ● ● ● ● ●
+● ● ● ● ○ □ □ □
+", PlayerType::First);
+
+        let result = searcher.evaluate_next_moves(&board, depth);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].1, 52);
+    }
+
     #[test]
     fn d2_2branches_including_skip_from_black() {
         for searcher in searchers() {
