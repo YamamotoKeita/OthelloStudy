@@ -25,7 +25,7 @@ impl <T: Evaluator> NegaAlpha<T> {
         if board.placeable_points == 0 {
             let new_board = board.skip_turn();
             return if new_board.is_game_end() {
-                self.evaluator.evaluate(&board) * last_player.opposite().sign()
+                self.evaluator.evaluate(&new_board) * last_player.opposite().sign()
             } else {
                 -self.nega_alpha(&new_board, depth, -beta, -alpha, last_player)
             }
