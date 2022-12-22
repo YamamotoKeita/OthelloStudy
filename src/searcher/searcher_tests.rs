@@ -13,14 +13,14 @@ mod searcher_tests {
 
     fn searchers() -> Vec<Box<dyn GameTreeSearcher>> {
         vec![
-            Box::new(min_max()),
+            Box::new(mini_max()),
             Box::new(alpha_beta()),
             Box::new(nega_alpha()),
             Box::new(nega_max_nyanyan()),
         ]
     }
 
-    fn min_max() -> MiniMax<StoneCountEvaluator> {MiniMax::new(StoneCountEvaluator::new())}
+    fn mini_max() -> MiniMax<StoneCountEvaluator> {MiniMax::new(StoneCountEvaluator::new())}
     fn alpha_beta() -> AlphaBeta<StoneCountEvaluator> {AlphaBeta::new(StoneCountEvaluator::new())}
     fn nega_alpha() -> NegaAlpha<StoneCountEvaluator> {NegaAlpha::new(StoneCountEvaluator::new())}
     fn nega_max_nyanyan() -> NegaMaxNyanyan<StoneCountNyanyanEvaluator> {NegaMaxNyanyan::new(StoneCountNyanyanEvaluator::new())}
