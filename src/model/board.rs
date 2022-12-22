@@ -153,6 +153,7 @@ impl Board {
     }
 
     pub fn is_game_end(&self) -> bool {
+        // TODO For farther performance, should I test "self.stone_count == 64" first?
         self.player == PlayerType::None
     }
 
