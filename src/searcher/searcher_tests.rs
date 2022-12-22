@@ -345,7 +345,30 @@ mod searcher_tests {
     }
 
     #[test]
-    fn d3_end_from_white() {}
+    fn d3_2branches_end_from_white() {
+        for searcher in searchers() {
+            test_d3_2branches_end_from_white(&*searcher, 3);
+            test_d3_2branches_end_from_white(&*searcher, 4);
+            test_d3_2branches_end_from_white(&*searcher, 5);
+        }
+    }
+    fn test_d3_2branches_end_from_white(searcher: &dyn GameTreeSearcher, depth: u32) {
+        let board = Board::new_by_text("
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ● ○ ○
+○ ○ ○ ○ ○ ○ ○ ●
+○ ○ ○ ○ ● □ □ □
+", PlayerType::Second);
+
+        let result = searcher.evaluate_next_moves(&board, depth);
+        assert_eq!(result.len(), 2);
+        assert_eq!(result[0].1, 62);
+        assert_eq!(result[1].1, 58);
+    }
 
     #[test]
     fn d2_2branches_including_skip_from_black() {
