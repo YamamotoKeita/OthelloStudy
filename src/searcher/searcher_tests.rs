@@ -272,22 +272,110 @@ mod searcher_tests {
         assert_eq!(result[0].1, 58);
     }
 
+    /*
+        Root
+        Black(●) Turn
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ○ ● ●
+        ● ● ● ● ● ● ● ○
+        ● ● ● ● ○ □ □ □
+
+        D1
+        White(○) Turn
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ○ ● ●   ● ● ● ● ● ○ ● ●
+        ● ● ● ● ● ● ● ○   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● □ □   ● ● ● ● ○ □ □ ●
+
+        D2
+        Black Turn
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ○ ● ●   ● ● ● ● ● ○ ● ●
+        ● ● ● ● ● ● ○ ○   ● ● ● ● ● ○ ● ●
+        ● ● ● ● ● ● □ ○   ● ● ● ● ○ ○ □ ●
+
+        D3
+        End
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ●   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ○ ● ●   ● ● ● ● ● ○ ● ●
+        ● ● ● ● ● ● ● ○   ● ● ● ● ● ● ● ●
+        ● ● ● ● ● ● ● ○   ● ● ● ● ● ● ● ●
+        61 - 3 = 58       63 - 1 = 62
+     */
     #[test]
-    fn d3_end_from_black() {}
+    fn d3_2branches_end_from_black() {
+        for searcher in searchers() {
+            test_d3_2branches_end_from_black(&*searcher, 3);
+            test_d3_2branches_end_from_black(&*searcher, 4);
+        }
+    }
+    fn test_d3_2branches_end_from_black(searcher: &dyn GameTreeSearcher, depth: u32) {
+        let board = Board::new_by_text("
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ○ ● ●
+● ● ● ● ● ● ● ○
+● ● ● ● ○ □ □ □
+", PlayerType::First);
+
+        let result = searcher.evaluate_next_moves(&board, depth);
+        assert_eq!(result.len(), 2);
+        assert_eq!(result[0].1, 62);
+        assert_eq!(result[1].1, 58);
+    }
 
     #[test]
     fn d3_end_from_white() {}
 
     #[test]
-    fn d2_including_skip_from_black() {}
-
-    #[test]
-    fn d2_including_skip_from_white() {
+    fn d2_2branches_including_skip_from_black() {
         for searcher in searchers() {
-            test_d2_including_skip_from_white(&*searcher);
+            test_d2_2branches_including_skip_from_black(&*searcher);
         }
     }
-    fn test_d2_including_skip_from_white(searcher: &dyn GameTreeSearcher) {
+    fn test_d2_2branches_including_skip_from_black(searcher: &dyn GameTreeSearcher) {
+        let board = Board::new_by_text("
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ●
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ ○ ○ ○ ○
+○ ○ ○ ○ □ □ □ □
+", PlayerType::First);
+
+        let result = searcher.evaluate_next_moves(&board, 2);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].1, -46);
+    }
+
+    #[test]
+    fn d2_2branches_including_skip_from_white() {
+        for searcher in searchers() {
+            test_d2_2branches_including_skip_from_white(&*searcher);
+        }
+    }
+    fn test_d2_2branches_including_skip_from_white(searcher: &dyn GameTreeSearcher) {
         let board = Board::new_by_text("
 ● ● ● ● ● ● ● ●
 ● ● ● ● ● ● ● ●
