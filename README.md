@@ -3,9 +3,12 @@ An Othello program to try out the Rust.
 
 
 # TODO
+- ✅ Make a simple AI that is not that strong
+- ✅ Make simple CUI
+- Make GUI
+- Have a database of standard movements in the early stages
 - Evaluate the board using stones pattern evaluation values computed by machine learning
 - Apply move ordering to pruning
-- Have a database of standard movements in the early stages
 - Make NegaScout algorithm
 - Limit the search time
 - Optimize evaluation parameters using machine learning
